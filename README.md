@@ -3,7 +3,8 @@ Cooperative project for university class (https://www.fit.vutbr.cz/study/courses
 ### Possible themes
 * Lights control
 * Music control
-* Securyty control
+* Security control
+* Orchestration of cleaning robots
 * ...
 
 Feel free to add more.
