@@ -1,0 +1,92 @@
+Controller
+==========
+- IP		(IP addr)
+- port		(int)
+- name		(string)
+- status	(string)
+- rooms		(array<Room>)
+- sensors	(array<Sensor>)
+- powerStations	(array<PowerStation>)
+- robots	(array<Robot>)
+
+Room
+====
+- ID		(int)
+- name		(string)
+- shape		(Shape)
+- area		(double)
+- status	(string)
+- sensors	(array<Sensor>)
+- doors     (array<Door>)
+
+Door
+====
+- ID        (int)
+- name      (string)
+- location  (Point)
+- width     (int)
+- room1     (Room)
+- room2     (Room)
+
+Shape
+=====
+- ID		(int)
+- border	(list<Point>)
+- center	(Point)
+
+Point
+=====
+- ID	(int)
+- x	(int)
+- y	(int)
+- z	(int)
+
+Sensor
+======
+- ID	(int)
+- name	(string)
+- type	(string)
+- value	(double)
+
+PowerStation
+============
+- ID		(int)
+- name		(string)
+- location	(Point)
+- available	(bool)
+
+Robot
+=====
+- ID		(int)
+- name		(string)
+- power		(int)
+- returnPower	(int)
+- status	(string)
+- assignedRoom	(Room)
+- homeStation	(PowerStation)
+- positionX (int)
+- positionY (int)
+- speedX	(double)
+- speedY	(double)
+- speedZ	(double)
+
+ROBOT COMMANDS
+==============
+enterDoor(Door)
+changeHomeStation(Station)
+goHome()
+exploreRoom()
+cleanRoom()
+hold()
+sleep()
+
+
+CONSTANTS
+=========
+maxRobotPower
+rechargingTime
+maxCleanableArea
+cleaningTime
+monitoringTime
+robotMovementSpeed
+
