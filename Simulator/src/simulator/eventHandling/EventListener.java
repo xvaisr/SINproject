@@ -4,12 +4,13 @@
  * and open the template in the editor.
  */
 
-package simulator.environement.rooms;
+package simulator.eventHandling;
 
 /**
  *
  * @author Roman Vais
  */
-public class Enterance implements Room {
+public interface EventListener {
 
+    public void precieveEvent(Event ev);
 }

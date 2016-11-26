@@ -4,27 +4,23 @@
  * and open the template in the editor.
  */
 
-package simulator.entities;
+package simulator.environement.rooms;
 
 import java.util.LinkedList;
 import simulator.eventHandling.Event;
+import simulator.eventHandling.EventInvoker;
 import simulator.eventHandling.EventListener;
 
 /**
  *
  * @author Roman Vais
  */
-public abstract class AbstractEntity implements Entity {
+public abstract class AbstractRoom implements Room, EventInvoker, EventListener {
 
     private final LinkedList<EventListener> listeners;
 
-    public AbstractEntity() {
+    public AbstractRoom() {
         this.listeners = new LinkedList<>();
-    }
-
-    @Override
-    public String getType() {
-        return this.getClass().getName();
     }
 
     @Override
@@ -46,6 +42,11 @@ public abstract class AbstractEntity implements Entity {
         for (EventListener listener : this.listeners) {
             listener.precieveEvent(ev);
         }
+    }
+
+    @Override
+    public void precieveEvent(Event ev) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

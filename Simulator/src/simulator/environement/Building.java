@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import simulator.environement.rooms.Room;
+import simulator.environement.rooms.impl.Enterance;
+import simulator.utils.graph.Graph;
+import simulator.utils.graph.Node;
 
 /**
  *
@@ -18,9 +21,13 @@ import simulator.environement.rooms.Room;
 public class Building {
 
     private ArrayList<Room> rooms;
+    private Graph<Room> schema;
 
     public Building() {
+        Room enterance = new Enterance();
         this.rooms = new ArrayList();
+        this.rooms.add(enterance);
+        this.schema = new Graph<>(new Node<>(enterance));
     }
 
     public List<Room> getRoomList() {

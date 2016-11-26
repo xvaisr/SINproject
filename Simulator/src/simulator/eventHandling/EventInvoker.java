@@ -4,12 +4,16 @@
  * and open the template in the editor.
  */
 
-package simulator.environement.rooms;
+package simulator.eventHandling;
 
 /**
  *
  * @author Roman Vais
  */
-public class CommonRoom implements Room {
+public interface EventInvoker {
+
+    public void addEventListener(EventListener li);
+    public void removeEventListener(EventListener li);
+    public void fireEvent(Event ev);
 
 }
