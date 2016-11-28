@@ -4,19 +4,12 @@
  * and open the template in the editor.
  */
 
-package simulator.eventHandling;
-
-import simulator.entities.Entity;
+package simulator.entities.actions.human;
 
 /**
  *
  * @author Roman Vais
  */
-public interface Event {
-
-    public String getType();
-    public Entity getSource();
-    public int getTimestamp();
-    
+public class MoveAroundRoom {
 
 }

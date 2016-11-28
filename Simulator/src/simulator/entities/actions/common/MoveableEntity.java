@@ -4,19 +4,19 @@
  * and open the template in the editor.
  */
 
-package simulator.eventHandling;
+package simulator.entities.actions.common;
 
+import java.util.List;
 import simulator.entities.Entity;
+import simulator.environement.rooms.Room;
 
 /**
  *
  * @author Roman Vais
  */
-public interface Event {
+public interface MoveableEntity extends Entity {
 
-    public String getType();
-    public Entity getSource();
-    public int getTimestamp();
-    
+    public void changeRoom(Room r);
+    public void travel(List<Room> path);
 
 }

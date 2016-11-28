@@ -6,10 +6,24 @@
 
 package simulator.entities.impl;
 
+import simulator.entities.AbstractEntity;
+import simulator.entities.actions.Action;
+import simulator.eventHandling.Event;
+
 /**
  *
  * @author Roman Vais
  */
-public class MovementSenzor {
+public class MovementSenzor extends AbstractEntity {
+
+    @Override
+    public boolean performeAction(Action act) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void preciveEvent(Event ev) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

@@ -4,19 +4,14 @@
  * and open the template in the editor.
  */
 
-package simulator.eventHandling;
-
-import simulator.entities.Entity;
+package simulator.logging;
 
 /**
  *
  * @author Roman Vais
  */
-public interface Event {
+public class EventLogger {
 
-    public String getType();
-    public Entity getSource();
-    public int getTimestamp();
     
 
 }
