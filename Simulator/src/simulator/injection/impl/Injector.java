@@ -16,6 +16,9 @@ import java.util.List;
 import simulator.injection.Injection;
 import simulator.injection.Named;
 import simulator.injection.Singleton;
+import simulator.logging.LoggerFactory;
+import simulator.logging.SimulationLogger;
+import simulator.logging.impl.SystemLogger;
 
 /**
  *
@@ -33,10 +36,24 @@ public class Injector {
 
     private HashMap<Class<?>, List<NameBind>> bindings;
     private HashMap<Class<?>, Object> instances;
+    private SimulationLogger logger;
 
     private Injector() {
         this.bindings = new HashMap<>();
         this.instances = new HashMap<>();
+        this.logger = new SystemLogger(this.getClass().getName(), SystemLogger.DEFAULT_FORMAT,
+                SimulationLogger.LogLevel.DEBUG);
+    }
+
+    public static boolean selfinjectLogger() {
+        LoggerFactory factory = inject(LoggerFactory.class, DEFAULT_NAME);
+        if (factory == null) {
+            Injector.instance.logger.logDebug("Selfinjecting logger faild");
+            return false;
+        }
+        Injector.instance.logger = factory.getLogger(Injector.class);
+        Injector.instance.logger.logDebug("Selfinjecting logger succeded.");
+        return true;
     }
 
     public static <T> T inject(Class<T> clazz) {
@@ -65,6 +82,7 @@ public class Injector {
         knownClass = this.bindings.containsKey(inf);
 
         if (!knownClass && (inf.isInterface() || inf.isEnum() || inf.isAnnotation() || inf.isArray())) {
+            logger.logError("Class '" + inf.getName() + "' is not known class and is not possible to create instance.");
             return null;
         }
 
@@ -73,27 +91,33 @@ public class Injector {
                 Named annot = inf.getAnnotation(Named.class);
 
                 if (annot.name() == null || !annot.name().equals(named)) {
+                    logger.logError("Class '" + inf.getName() + "' is not known class and @Named annotation doesn't "
+                            + " match with called name.");
                     return null;
                 }
             }
 
+            logger.logDebug("Class '" + inf.getName() + "' Does not have any known bindings.");
             inst =  this.createInstance(inf);
 
             if (inst != null) {
-                if (!inf.isAnnotationPresent(Named.class)) {
-                    named = Injector.DEFAULT_NAME;
-                }
                 this.bindClass(inf, inf);
+                logger.logInfo("Class '" + inf.getName() + "' was binded to it's own interface (to itself).");
 
                 if (inf.isAnnotationPresent(Singleton.class)) {
                     bindInstance(inf, inst);
+                    logger.logDebug("Class '" + inf.getName() + "' is singleton. Instance was binded.");
                 }
+            }
+            else {
+                logger.logError("Ccouldn't create instance of '" + inf.getName() + "' class.");
             }
             return inst;
         }
 
         if (knownClass) {
 
+            logger.logDebug("Class '" + inf.getName() + "' Has known bindings.");
             List<NameBind> bindList = this.bindings.get(inf);
             for (NameBind bind : bindList) {
                 if(!bind.name.equals(named)) {
@@ -102,26 +126,18 @@ public class Injector {
 
                 Object newInstance = null;
                 Class<?> dependenci = bind.clazz;
+                newInstance = this.createInstance(dependenci);
 
-                if (dependenci.isAnnotationPresent(Singleton.class)) {
-                    if (this.instances.containsKey(dependenci)) {
-                        newInstance = this.instances.get(dependenci);
-                    }
-                    else {
-                        newInstance = this.createInstance(dependenci);
-                        if (newInstance != null) {
-                            this.bindInstance(dependenci, newInstance);
-                        }
-                    }
-                }
-                else {
-                    newInstance = this.createInstance(dependenci);
-                }
                 if (newInstance != null) {
+                    logger.logDebug("Creating instance for'" + dependenci.getName() + "' class failed.");
                     inst = inf.cast(newInstance);
                 }
                 break;
             }
+        }
+
+        if (inst == null) {
+            logger.logError("Class '" + inf.getName() + "' has no known matching bindings.");
         }
 
         return inst;
@@ -132,6 +148,7 @@ public class Injector {
         String named = Injector.DEFAULT_NAME;
 
         if (!inf.isAssignableFrom(clazz)) {
+            logger.logError("Interface '" + inf.getName() + "' and '" + clazz.getName() + "' class sre incompatible.");
             return false;
         }
 
@@ -146,15 +163,19 @@ public class Injector {
 
         if (this.bindings.containsKey(inf)) {
             bindlist = this.bindings.get(inf);
+            logger.logDebug("Existing binding list found for interface '" + inf.getName() + "'.");
         }
         else {
             bindlist = new LinkedList<>();
             this.bindings.put(inf, bindlist);
+            logger.logDebug("New binding list created for interface '" + inf.getName() + "'.");
         }
 
         for (NameBind b : bindlist) {
             if (b.name.equals(named)) {
                 if (clazz != b.clazz) {
+                    logger.logError("Binding for interface '" + inf.getName() + "' with anotation Named='" + named +
+                            "' already exists. Cannot bind different class to the same name space.");
                     return false;
                 }
                 else {
@@ -169,6 +190,8 @@ public class Injector {
         bind.name = named;
 
         bindlist.add(bind);
+        logger.logDebug("New binding of interface '" + inf.getName() + "' and '" + clazz.getName() +
+                "' was added to bind list under '" + named + "' name.");
         return true;
     }
 
@@ -183,6 +206,7 @@ public class Injector {
 
     private <T> T createInstance(Class<T> inf) {
         if (this.instances.containsKey(inf)) {
+            logger.logDebug("Found existing instance for  '" + inf.getName() + "' singleton class.");
             try {
                 Object inst = this.instances.get(inf);
                 return inf.cast(inst);
@@ -197,6 +221,7 @@ public class Injector {
 
         for (Field f : allFields) {
             if (f.isAnnotationPresent(Injection.class)) {
+                logger.logDebug("Found Injection annotation for '" + f.getName() + "' member.");
                 fields.add(f);
             }
         }
@@ -211,7 +236,8 @@ public class Injector {
                 f.setAccessible( true );
 
                 Injection annotation = f.getAnnotation(Injection.class);
-
+                logger.logDebug("Trying to get instance for '" + clazz.getName() + "' and '"
+                        + f.getName() + "' field.");
                 f.set(infInstance, this.getInstance(clazz, annotation.named()));
             }
 
@@ -221,6 +247,7 @@ public class Injector {
                | InvocationTargetException | InstantiationException ex)
         {
             // there is nothing I can do about it ...
+            logger.logDebug("Exception thrown during attempt to create instance of '" + inf.getName() + "' class.", ex);
         }
 
         return null;

@@ -4,14 +4,12 @@
  * and open the template in the editor.
  */
 
-package simulator.logging;
+package simulator.logging.impl;
 
 /**
  *
  * @author Roman Vais
  */
-public class EventLogger {
-
-    
+public class EventLoggerFactory {
 
 }
