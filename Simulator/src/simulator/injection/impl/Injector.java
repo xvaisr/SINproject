@@ -6,7 +6,6 @@
 
 package simulator.injection.impl;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -110,7 +109,7 @@ public class Injector {
                 }
             }
             else {
-                logger.logError("Ccouldn't create instance of '" + inf.getName() + "' class.");
+                logger.logError("Couldn't create instance of '" + inf.getName() + "' class.");
             }
             return inst;
         }
@@ -129,7 +128,12 @@ public class Injector {
                 newInstance = this.createInstance(dependenci);
 
                 if (newInstance != null) {
-                    logger.logDebug("Creating instance for'" + dependenci.getName() + "' class failed.");
+                    if (inf.isAnnotationPresent(Singleton.class) || dependenci.isAnnotationPresent(Singleton.class)) {
+                        bindInstance(dependenci, newInstance);
+                        logger.logDebug("Class '" + inf.getName() + "' is singleton. Instance was binded.");
+                    }
+
+                    logger.logDebug("Creating instance for'" + dependenci.getName() + "' class succeeded.");
                     inst = inf.cast(newInstance);
                 }
                 break;

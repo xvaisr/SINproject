@@ -6,10 +6,13 @@
 
 package simulator.logging;
 
+import simulator.injection.Singleton;
+
 /**
  *
  * @author Roman Vais
  */
+@Singleton
 public interface LoggerFactory {
 
     public boolean setChangeOnCall(boolean change);

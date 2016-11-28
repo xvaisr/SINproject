@@ -18,7 +18,7 @@ import simulator.logging.SimulationLogger;
 @Named(name = "default")
 public class SimulatorLoggerFactory implements LoggerFactory {
 
-    public static final String DEFAULT_FORMAT = "#{name} [#{level}]: #{message};#{stack}";
+    public static final String DEFAULT_FORMAT = "#{name} [#{level}]: #{message} #{stack}";
     public static final SimulationLogger.LogLevel DEFAULT_LEVEL = SimulationLogger.LogLevel.DEBUG;
 
     private final Hashtable<String, SystemLogger> dployedLoggers;
@@ -67,7 +67,7 @@ public class SimulatorLoggerFactory implements LoggerFactory {
     @Override
     public SimulationLogger getLogger(String name, SimulationLogger.LogLevel level, String format) {
         SystemLogger logger;
-        if (this.dployedLoggers.contains(name)) {
+        if (this.dployedLoggers.containsKey(name)) {
             logger = this.dployedLoggers.get(name);
             if (this.changeOnCall) {
                 logger.setFormat(format);

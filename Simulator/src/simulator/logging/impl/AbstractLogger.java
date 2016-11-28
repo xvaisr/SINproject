@@ -19,7 +19,7 @@ import simulator.logging.SimulationLogger;
 public abstract class AbstractLogger implements SimulationLogger {
 
     public static final String DEFAULT_NAME = "Logger";
-    public static final String DEFAULT_FORMAT = "#{name} [#{level}]: #{message};#{stack}";
+    public static final String DEFAULT_FORMAT = "#{name} [#{level}]: #{message} #{stack}";
 
     private static final String LOGGER_NAME = "name";
     private static final String LOGGING_LEVEL = "level";
@@ -33,6 +33,7 @@ public abstract class AbstractLogger implements SimulationLogger {
     private String format;
     private SimulationLogger.LogLevel level;
     private final StringBuilder msg;
+    private final PrintWriter messageWriter;
 
     public AbstractLogger() {
         this(DEFAULT_FORMAT, DEFAULT_NAME, SimulationLogger.LogLevel.INFO);
@@ -43,6 +44,7 @@ public abstract class AbstractLogger implements SimulationLogger {
         this.format = format;
         this.level = lvl;
         this.msg = new StringBuilder(BUFFER);
+        this.messageWriter = new PrintWriter(new MessageWriter(this.msg));
     }
 
     public final void setFormat(String f) {
@@ -58,18 +60,18 @@ public abstract class AbstractLogger implements SimulationLogger {
     }
 
     private String privateFormatter(SimulationLogger.LogLevel level, String message, Throwable ex) {
-        msg.delete(0, BUFFER);
+        this.msg.setLength(0);
 
         for (int index = 0; index >= 0 && index < this.format.length();) {
             int match = this.format.indexOf('#', index);
             if (match >= 0) {
-                msg.append(this.format.substring(index, match));
+                this.msg.append(this.format.substring(index, match));
                 if (this.format.charAt(match + 1) == '{') {
                     int i,j;
                     i = match + 1;
                     j = this.format.indexOf('}',i);
                     if (j < i) {
-                        msg.append(" Error: Bad formating string ...");
+                        this.msg.append(" Error: Bad formating string ...");
                         break;
                     }
 
@@ -77,20 +79,19 @@ public abstract class AbstractLogger implements SimulationLogger {
                     String joker = this.format.substring(i, j);
                     switch(joker) {
                         case LOGGER_NAME:
-                            msg.append(this.name);
+                            this.msg.append(this.name);
                         break;
                         case LOGGING_LEVEL:
-                            msg.append(level.name());
+                            this.msg.append(level.name());
                         break;
                         case MESSAGE:
-                            msg.append(message);
+                            this.msg.append(message);
                         break;
                         case STACK:
                             if(ex != null) {
-                                Writer messageWriter = new MessageWriter(msg);
-                                msg.append('\n');
-                                ex.printStackTrace((PrintWriter) messageWriter);
-                                msg.append('\n');
+                                this.msg.append('\n');
+                                ex.printStackTrace(this.messageWriter);
+                                this.msg.append('\n');
                             }
                         break;
                     }
@@ -100,31 +101,31 @@ public abstract class AbstractLogger implements SimulationLogger {
                 index = match + 1;
             }
             else {
-                msg.append(format.substring(index));
+                this.msg.append(format.substring(index));
                 index = match;
             }
         }
 
-        return msg.toString();
+        return this.msg.toString();
     }
 
     private String publicFormatter(String format, Object[] args) {
-        msg.delete(0, BUFFER);
+        this.msg.setLength(0);
 
         for (int index = 0, n = 0; index >= 0 && index < format.length() && n < args.length; n++) {
             int match = format.indexOf("#",index);
             if (match > 0) {
-                msg.append(format.substring(index, match));
-                msg.append(args[n].toString());
+                this.msg.append(format.substring(index, match));
+                this.msg.append(args[n].toString());
                 index = match + 1;
             }
             else {
-                msg.append(format.substring(index));
+                this.msg.append(format.substring(index));
                 index = match;
             }
         }
 
-        return msg.toString();
+        return this.msg.toString();
     }
 
     @Override
