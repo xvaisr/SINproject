@@ -6,7 +6,10 @@
 
 package simulator.eventHandling;
 
+import java.util.List;
 import simulator.entities.Entity;
+import simulator.entities.actions.Action;
+import simulator.utils.modeltime.TimeStamp;
 
 /**
  *
@@ -15,8 +18,13 @@ import simulator.entities.Entity;
 public interface Event {
 
     public String getType();
-    public Entity getSource();
-    public int getTimestamp();
-    
+    public Entity getSourceEntity();
+    public <T> T getSourceEntity(Class<T> inf);
+    public TimeStamp getTimestamp();
+    public List<Action> getActionList();
+    public void setScheduled();
+    public boolean getIsScheduled();
+
+
 
 }

@@ -17,6 +17,7 @@ import simulator.eventHandling.EventListener;
  */
 public abstract class AbstractRoom implements Room, EventInvoker, EventListener {
 
+
     private final LinkedList<EventListener> listeners;
 
     public AbstractRoom() {
@@ -25,28 +26,29 @@ public abstract class AbstractRoom implements Room, EventInvoker, EventListener 
 
     @Override
     public void addEventListener(EventListener li) {
-        if (this.listeners.contains(li)) {
-            return;
-        }
+        synchronized(this.listeners) {
+            if (this.listeners.contains(li)) {
+                return;
+            }
 
-        this.listeners.add(li);
+            this.listeners.add(li);
+        }
     }
 
     @Override
     public void removeEventListener(EventListener li) {
-        this.listeners.remove(li);
-    }
-
-    @Override
-    public void fireEvent(Event ev) {
-        for (EventListener listener : this.listeners) {
-            listener.precieveEvent(ev);
+        synchronized(this.listeners) {
+            this.listeners.remove(li);
         }
     }
 
     @Override
-    public void precieveEvent(Event ev) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void fireEvent(Event ev) {
+        synchronized(this.listeners) {
+            for (EventListener listener : this.listeners) {
+                listener.precieveEvent(ev);
+            }
+        }
     }
 
 }

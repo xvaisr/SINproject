@@ -12,6 +12,7 @@ import java.util.List;
 import simulator.entities.Entity;
 import simulator.environement.rooms.AbstractRoom;
 import simulator.environement.rooms.Room;
+import simulator.eventHandling.Event;
 
 /**
  *
@@ -47,6 +48,11 @@ public class Enterance extends AbstractRoom {
     @Override
     public boolean removeEntity(Entity ent) {
         return false;
+    }
+
+    @Override
+    public void precieveEvent(Event ev) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

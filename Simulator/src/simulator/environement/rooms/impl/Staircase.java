@@ -18,37 +18,38 @@ import simulator.eventHandling.Event;
  *
  * @author Roman Vais
  */
-public class CommonRoom extends AbstractRoom {
+public class Staircase extends AbstractRoom {
 
     private final String name;
     private final Dimension size;
     private final List<Entity> entList;
 
-    public CommonRoom(String name, int width, int lenght) {
-        this.name = name;
-        this.size = new Dimension(width, lenght);
+    public Staircase() {
+        this.name = this.getClass().getSimpleName();
+        this.size = new Dimension(150, 1000);
         this.entList = new LinkedList<>();
-
     }
+
+
 
     @Override
     public String getID() {
-        return this.name;
+         return this.name + " " + this.hashCode();
     }
 
     @Override
     public Dimension getSize() {
-        return new Dimension(this.size);
+        return this.size;
     }
 
     @Override
     public int getSurfaceArea() {
-        return this.size.width * this.size.height;
+        return this.size.height * this.size.width;
     }
 
     @Override
     public List<Entity> getEntityList() {
-        return Collections.unmodifiableList(entList);
+        return Collections.unmodifiableList(this.entList);
     }
 
     @Override

@@ -40,6 +40,11 @@ public class Simulator {
         logger1.logDebug("logger1 === logger2: " + String.valueOf(logger1 == logger2));
         logger1.logDebug("factory1 === factory2: " + String.valueOf(factory1 == factory2));
 
+        factory1.setChangeOnCall(true);
+        logger1 = factory1.getLogger(Simulator.class,SimulationLogger.LogLevel.SIMULATION, "#[#{level}]: #{message} #{stack}");
+        logger1.logDebug("This should not show i log ...");
+        logger1.logSimulation("This is simulation log and should be on stderr.");
+
     }
 
 }

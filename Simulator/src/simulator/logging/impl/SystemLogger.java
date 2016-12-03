@@ -25,6 +25,7 @@ public class SystemLogger extends AbstractLogger {
     @Override
     protected void write(String message) {
         if(this.getLoggingLevel() == LogLevel.SIMULATION) {
+            System.err.println(message);
             return;
         }
         System.out.println(message);

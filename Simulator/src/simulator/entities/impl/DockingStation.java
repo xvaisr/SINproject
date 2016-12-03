@@ -9,6 +9,7 @@ package simulator.entities.impl;
 import simulator.entities.AbstractEntity;
 import simulator.entities.Entity;
 import simulator.entities.actions.Action;
+import simulator.environement.rooms.Room;
 import simulator.eventHandling.Event;
 import simulator.eventHandling.EventListener;
 
@@ -57,6 +58,16 @@ public class DockingStation extends AbstractEntity {
 
     @Override
     public void preciveEvent(Event ev) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Room getLocation() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void precieveEvent(Event ev) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
