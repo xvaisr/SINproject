@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<building>
+  <entities>
+    <human id="h1" />
+    <human id="h2" />
+    <human id="h3" />
+    <human id="h4" />
+    <human id="h5" />
+    <roomba id="roomba1" battery="3000" speed="0.8"/> <!-- up to 6 hours of continuos operation, up to 1m/s -->
+    <roomba id="roomba2" battery="3000" speed="0.8"/>
+    <roomba id="roomba3" battery="3000" speed="0.8"/>
+    <dockingstation id="station1" charging=""> <!-- 22.5 V 1.25 A nutne spocitat -->
+    <dockingstation id="station2" charging=""> 
+
+    <!-- pokud chces mit v modelu nejaky nabitek, pridej si sem co chces, ale musi u toho byt hodnota kolik plochy to ubere z mistnosti -->
+
+  </entities>
+
+  <rooms>
+    <room id="hall-way-ground-floor" type="CommonRoom">
+      <dockingstation id="station1" />
+      <roomba id="roomba1" />
+    </room>
+    <room id="hall-way-1st-floot" type="CommonRoom">
+      <dockingstation id="station2" />
+      <roomba id="roomba2" />
+    </room>
+    <room id="office101" type="CommonRoom">
+      <human id="h1" />
+    </room>
+    <room id="office001" type="CommonRoom">
+      <human id="h2" />
+    </room>
+    <room id="office002" type="CommonRoom">
+      <human id="h3" />
+    </room>
+    <room id="meetingroom102" type="CommonRoom">
+      <human id="h4" />
+      <human id="h5" />
+    </room>
+    <room id="meetingroom003" type="CommonRoom">
+      <roomba id="roomba3" />
+    </room>
+    <room id="staircase" type="StairCase" />
+  </rooms>
+
+  <schema>
+    <room id="hall-way-ground-floor">
+      <room id="office001" />
+      <room id="office002" />
+      <room id="meetingroom003" />
+      <room id="staircase">
+        <room id="hall-way-1st-floot">
+          <room id="office101" />
+          <room id="meetingroom102" />
+        </room>
+      </room>
+    </room>
+  </schema>
+
+</building>
+
+
+
+
+
+
