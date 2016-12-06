@@ -33,22 +33,6 @@ public class Plan extends JPanel {
         repaint();
     }
 
-    private void initBuilding() {
-        addEntrance("1", 50);
-        addRoom("1", "2", 30);
-        addRoom("1", "3", 50);
-        addRoom("2", "4", 25);
-        addRoom("4", "5", 35);
-        addRoom("5", "6", 53);
-        addRoom("1", "7", 42);
-        addStation("X", "1");
-        placeRoomba("A", "X");
-        selectRoom("1");
-        moveRoomba("A", "1 2");
-        startCleaningIn("2");
-        makeSomeMessIn("3");
-    }
-
     private Slot[] initSlots() {
         this.slotsInRows = this.getHeight() / slotSize;
         this.slotsInColumns = this.getWidth() / slotSize;
@@ -66,40 +50,22 @@ public class Plan extends JPanel {
         return a;
     }
 
-    private void moveRoomba(String bn, String dn) {
-        Roomba b = this.roombas.getOrDefault(bn, null);
-        Door d = this.doors.getOrDefault(dn, null);
-        if (d != null && b != null) {
-            b.moveViaDoor(d);
-        }
+    private void initBuilding() {
+        addEntrance("1", 50);
+        addRoom("1", "2", 30);
+        addRoom("1", "3", 50);
+        addRoom("2", "4", 25);
+        addRoom("4", "5", 35);
+        addRoom("1", "6", 53);
+        addRoom("1", "7", 42);
+        addStation("X", "1");
+        addStation("Y", "5");
+        placeRoomba("A", "X");
     }
 
-    private void placeRoomba(String id, String sn) {
-        Station s = this.stations.getOrDefault(sn, null);
-        if (s != null) {
-            Roomba b = s.placeRoomba();
-            this.roombas.put(id, b);
-        }
-    }
-
-    private void addStation(String id, String rn) {
-        Room r = this.rooms.getOrDefault(rn, null);
-        Station s = new Station(r, findNeighbor(r));
-        this.stations.put(id, s);
-    }
-
-    private void makeSomeMessIn(String id) {
-        Room r = rooms.getOrDefault(id, null);
-        if (r != null) {
-            r.makeSomeMess();
-        }
-    }
-
-    private void startCleaningIn(String id) {
-        Room r = rooms.getOrDefault(id, null);
-        if (r != null) {
-            r.startCleaning();
-        }
+    private void addEntrance(String id, int area) {
+        Room r = new Room(this.slots[this.slots.length / 2], area);
+        this.rooms.put(id, r);
     }
 
     private void addRoom(String n1, String n2, int area) {
@@ -110,6 +76,20 @@ public class Plan extends JPanel {
             this.rooms.put(n2, r2);
             Door d = new Door(r1, r2);
             this.doors.put(n1 + " " + n2, d);
+        }
+    }
+
+    private void addStation(String id, String rn) {
+        Room r = this.rooms.getOrDefault(rn, null);
+        Station s = new Station(r, findNeighbor(r));
+        this.stations.put(id, s);
+    }
+
+    private void placeRoomba(String id, String sn) {
+        Station s = this.stations.getOrDefault(sn, null);
+        if (s != null) {
+            Roomba b = s.placeRoomba();
+            this.roombas.put(id, b);
         }
     }
 
@@ -131,21 +111,10 @@ public class Plan extends JPanel {
         return sn;
     }
 
-    private void selectRoom(String id) {
-        for (Entry<String, Room> e : rooms.entrySet()) {
-            Room r = e.getValue();
-            if (e.getKey().equals(id)) {
-                r.select();
-            } else {
-                r.deselect();
-            }
-        }
-    }
-
     private void drawPlan(Graphics2D g) {
-        for (Slot t : this.slots) {
+        /*for (Slot t : this.slots) {
             t.draw(g);
-        }
+        }*/
         for (Door d : this.doors.values()) {
             d.draw(g);
         }
@@ -165,8 +134,76 @@ public class Plan extends JPanel {
         drawPlan((Graphics2D) g);
     }
 
-    public void addEntrance(String id, int area) {
-        Room r = new Room(this.slots[this.slots.length / 2], area);
-        this.rooms.put(id, r);
+    private void roomSelect(String id) {
+        for (Entry<String, Room> e : rooms.entrySet()) {
+            Room r = e.getValue();
+            if (e.getKey().equals(id)) {
+                r.select();
+            } else {
+                r.deselect();
+            }
+        }
+    }
+
+    public void roomMakeMess(String rn) {
+        Room r = rooms.getOrDefault(rn, null);
+        if (r != null) {
+            r.makeSomeMess();
+        }
+    }
+
+    public void roomOccupied(String rn) {
+        Room r = rooms.getOrDefault(rn, null);
+        if (r != null) {
+            r.occupy();
+        }
+    }
+
+    public void roomClear(String rn) {
+        Room r = rooms.getOrDefault(rn, null);
+        if (r != null) {
+            r.clear();
+        }
+    }
+
+    public void roombaMove(String bn, String dn) {
+        Roomba b = this.roombas.getOrDefault(bn, null);
+        Door d = this.doors.getOrDefault(dn, null);
+        if (d != null && b != null) {
+            b.moveViaDoor(d);
+        }
+    }
+
+    public void roombaClean(String bn, String rn) {
+        Roomba b = roombas.getOrDefault(bn, null);
+        Room r = rooms.getOrDefault(rn, null);
+        if (r != null && b != null && r.getSlot().equals(b.getSlot())) {
+            b.startCleaning();
+            r.startCleaning();
+        }
+    }
+
+    public void roombaDone(String bn, String rn) {
+        Room r = rooms.getOrDefault(rn, null);
+        Roomba b = roombas.getOrDefault(bn, null);
+        if (r != null && b != null) {
+            r.wasCleaned();
+            b.isReady();
+        }
+    }
+
+    public void roombaNewHome(String bn, String sn) {
+        Roomba b = roombas.getOrDefault(bn, null);
+        Station s = stations.getOrDefault(sn, null);
+        if (s != null && b != null) {
+            b.newHome(s);
+        }
+    }
+
+    public void roombaGoHome(String bn) {
+        Roomba b = roombas.getOrDefault(bn, null);
+        if (b != null) {
+            b.goHome();
+        }
     }
 }
