@@ -7,12 +7,10 @@ import java.awt.*;
  * Created by trepik on 5.12.2016.
  */
 public class Room {
-    private static final short[] n = {0, -100, 100, 0, 0, 100, -100, 0, 60, 60, 60, -60, -60, -60, -60, 60};
     private Slot slot;
     private int area;
     private Color color;
     private boolean selected;
-    private int i = 0;
 
     public Room(int x, int y, int a) {
         this.slot = new Slot(x, y);

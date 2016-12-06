@@ -31,9 +31,7 @@ public class Roomba {
         }
         if (c1.equals(this.slot)) {
             this.slot = d.getCords2();
-            System.out.println("bububu");
         } else if (c2.equals(this.slot)) {
-            System.out.println("bububdskokadsou");
             this.slot = d.getCords1();
         } else {
             System.out.println("Wrong door");
@@ -47,5 +45,13 @@ public class Roomba {
 
     private void goHome() {
         this.slot = this.home.getSlot();
+    }
+
+    public Slot getSlot() {
+        return this.slot;
+    }
+
+    public void startCleaning() {
+        this.color = Color.blue;
     }
 }

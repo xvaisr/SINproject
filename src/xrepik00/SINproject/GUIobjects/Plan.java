@@ -2,6 +2,7 @@ package xrepik00.SINproject.GUIobjects;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,14 +40,10 @@ public class Plan extends JPanel {
         addRoom("1", "3", 50);
         addRoom("2", "4", 25);
         addRoom("4", "5", 35);
-        addRoom("5", "6", 53);
+        addRoom("1", "6", 53);
         addRoom("1", "7", 42);
         addStation("X", "1");
         placeRoomba("A", "X");
-        selectRoom("1");
-        moveRoomba("A", "1 2");
-        startCleaningIn("2");
-        makeSomeMessIn("3");
     }
 
     private Slot[] initSlots() {
@@ -66,7 +63,7 @@ public class Plan extends JPanel {
         return a;
     }
 
-    private void moveRoomba(String bn, String dn) {
+    public void roombaMove(String bn, String dn) {
         Roomba b = this.roombas.getOrDefault(bn, null);
         Door d = this.doors.getOrDefault(dn, null);
         if (d != null && b != null) {
@@ -92,13 +89,6 @@ public class Plan extends JPanel {
         Room r = rooms.getOrDefault(id, null);
         if (r != null) {
             r.makeSomeMess();
-        }
-    }
-
-    private void startCleaningIn(String id) {
-        Room r = rooms.getOrDefault(id, null);
-        if (r != null) {
-            r.startCleaning();
         }
     }
 
@@ -165,8 +155,17 @@ public class Plan extends JPanel {
         drawPlan((Graphics2D) g);
     }
 
-    public void addEntrance(String id, int area) {
+    private void addEntrance(String id, int area) {
         Room r = new Room(this.slots[this.slots.length / 2], area);
         this.rooms.put(id, r);
+    }
+
+    public void roombaClean(String bn, String rn) {
+        Roomba b = roombas.getOrDefault(bn, null);
+        Room r = rooms.getOrDefault(rn, null);
+        if (r != null && b != null && r.getSlot().equals(b.getSlot())) {
+            b.startCleaning();
+            r.startCleaning();
+        }
     }
 }
