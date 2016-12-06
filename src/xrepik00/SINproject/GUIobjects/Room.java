@@ -8,14 +8,22 @@ import java.awt.*;
  */
 public class Room {
     private static final short[] n = {0, -100, 100, 0, 0, 100, -100, 0, 60, 60, 60, -60, -60, -60, -60, 60};
-    private Cords cords;
+    private Slot slot;
     private int area;
     private Color color;
     private boolean selected;
     private int i = 0;
 
     public Room(int x, int y, int a) {
-        this.cords = new Cords(x, y);
+        this.slot = new Slot(x, y);
+        this.area = a;
+        this.color = Color.lightGray;
+        this.selected = false;
+    }
+
+    public Room(Slot s, int a) {
+        this.slot = s;
+        s.fill();
         this.area = a;
         this.color = Color.lightGray;
         this.selected = false;
@@ -31,12 +39,12 @@ public class Room {
 
     public void draw(Graphics2D g) {
         g.setColor(this.color);
-        g.fillOval(this.cords.getX() - this.area / 2, this.cords.getY() - this.area / 2,
+        g.fillOval(this.slot.getX() - this.area / 2, this.slot.getY() - this.area / 2,
                 this.area, this.area);
         if (this.selected) {
             g.setColor(Color.orange);
             g.setStroke(new BasicStroke(4));
-            g.drawOval(this.cords.getX() - this.area / 2, this.cords.getY() - this.area / 2,
+            g.drawOval(this.slot.getX() - this.area / 2, this.slot.getY() - this.area / 2,
                     this.area, this.area);
         }
     }
@@ -53,11 +61,7 @@ public class Room {
         this.color = Color.pink;
     }
 
-    public Cords neighbor() {
-        return new Cords(this.cords.getX() + n[this.i++], this.cords.getY() + n[this.i++]);
-    }
-
-    public Cords getCords() {
-        return this.cords;
+    public Slot getSlot() {
+        return this.slot;
     }
 }

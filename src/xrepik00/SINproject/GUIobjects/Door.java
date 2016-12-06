@@ -15,15 +15,15 @@ public class Door {
     }
 
     public void draw(Graphics2D g) {
-        g.drawLine(this.r1.getCords().getX(), this.r1.getCords().getY(),
-                this.r2.getCords().getX(), this.r2.getCords().getY());
+        g.drawLine(this.r1.getSlot().getX(), this.r1.getSlot().getY(),
+                this.r2.getSlot().getX(), this.r2.getSlot().getY());
     }
 
-    public Cords getCords1() {
-        return r1.getCords();
+    public Slot getCords1() {
+        return r1.getSlot();
     }
 
-    public Cords getCords2() {
-        return r2.getCords();
+    public Slot getCords2() {
+        return r2.getSlot();
     }
 }

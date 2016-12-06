@@ -6,18 +6,18 @@ import java.awt.*;
  * Created by trepik on 5.12.2016.
  */
 public class Station {
-    private static final int r = 8;
-    private Cords cords;
+    private static final int r = 14;
+    private Slot slot;
     private Room room;
     private Roomba roomba = null;
 
-    Station(Room r) {
+    Station(Room r, Slot s) {
         this.room = r;
-        this.cords = r.neighbor();
+        this.slot = s;
     }
 
-    public Cords getCords() {
-        return this.cords;
+    public Slot getSlot() {
+        return this.slot;
     }
 
 
@@ -32,9 +32,13 @@ public class Station {
 
     public void draw(Graphics2D g) {
         g.setColor(Color.darkGray);
-        g.fillOval(this.cords.getX() - r / 2, this.cords.getY() - r / 2, r, r);
+        g.fillOval(this.slot.getX() - r / 2, this.slot.getY() - r / 2, r, r);
         g.setStroke(new BasicStroke(1));
-        g.drawLine(this.cords.getX(), this.cords.getY(),
-                this.room.getCords().getX(), this.room.getCords().getY());
+        g.drawLine(this.slot.getX(), this.slot.getY(),
+                this.room.getSlot().getX(), this.room.getSlot().getY());
+    }
+
+    public Room getRoom() {
+        return this.room;
     }
 }
