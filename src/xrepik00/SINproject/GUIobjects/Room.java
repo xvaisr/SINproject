@@ -11,13 +11,7 @@ public class Room {
     private int area;
     private Color color;
     private boolean selected;
-
-    public Room(int x, int y, int a) {
-        this.slot = new Slot(x, y);
-        this.area = a;
-        this.color = Color.lightGray;
-        this.selected = false;
-    }
+    private boolean occupied;
 
     public Room(Slot s, int a) {
         this.slot = s;
@@ -25,6 +19,7 @@ public class Room {
         this.area = a;
         this.color = Color.lightGray;
         this.selected = false;
+        this.occupied = false;
     }
 
     public void select() {
@@ -39,8 +34,11 @@ public class Room {
         g.setColor(this.color);
         g.fillOval(this.slot.getX() - this.area / 2, this.slot.getY() - this.area / 2,
                 this.area, this.area);
-        if (this.selected) {
-            g.setColor(Color.orange);
+        if (this.occupied) {
+            g.setColor(Color.magenta);
+            if (this.selected) {
+                g.setColor(Color.orange);
+            }
             g.setStroke(new BasicStroke(4));
             g.drawOval(this.slot.getX() - this.area / 2, this.slot.getY() - this.area / 2,
                     this.area, this.area);
@@ -61,5 +59,13 @@ public class Room {
 
     public Slot getSlot() {
         return this.slot;
+    }
+
+    public void occupy() {
+        this.occupied = true;
+    }
+
+    public void clear() {
+        this.occupied = false;
     }
 }

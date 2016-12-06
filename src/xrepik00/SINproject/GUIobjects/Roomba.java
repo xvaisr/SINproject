@@ -43,7 +43,7 @@ public class Roomba {
         this.slot = r.getSlot();
     }
 
-    private void goHome() {
+    public void goHome() {
         this.slot = this.home.getSlot();
     }
 
@@ -53,5 +53,13 @@ public class Roomba {
 
     public void startCleaning() {
         this.color = Color.blue;
+    }
+
+    public void isReady() {
+        this.color = Color.white;
+    }
+
+    public void newHome(Station s) {
+        this.home = s;
     }
 }
