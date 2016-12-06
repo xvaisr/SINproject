@@ -5,12 +5,19 @@
  */
 package simulator;
 
+import java.util.Collections;
+import simulator.entities.Entity;
+import simulator.entities.impl.MovementSenzor;
+import simulator.environement.Building;
 import simulator.environement.rooms.Room;
 import simulator.environement.rooms.impl.CommonRoom;
+import simulator.eventHandling.Event;
+import simulator.eventHandling.Scheduler;
+import simulator.eventHandling.events.GeneralEvent;
 import simulator.injection.impl.Injector;
 import simulator.logging.LoggerFactory;
-import simulator.logging.SimulationLogger;
 import simulator.logging.impl.SimulatorLoggerFactory;
+import simulator.utils.modeltime.TimeStamp;
 
 /**
  *
@@ -23,9 +30,14 @@ public class Simulator {
      */
     public static void main(String[] args) {
 
+        // Bootstrap section
         Injector.bind(LoggerFactory.class, SimulatorLoggerFactory.class);
         Injector.selfinjectLogger();
+        Injector.bind(Building.class, Building.class);
+        Injector.bind(Scheduler.class, Scheduler.class);
 
+        // test of Dependenci injection
+        /*
         Room r = Injector.inject(CommonRoom.class);
 
         LoggerFactory factory1, factory2;
@@ -44,7 +56,26 @@ public class Simulator {
         logger1 = factory1.getLogger(Simulator.class,SimulationLogger.LogLevel.SIMULATION, "#[#{level}]: #{message} #{stack}");
         logger1.logDebug("This should not show i log ...");
         logger1.logSimulation("This is simulation log and should be on stderr.");
+        */
 
+        // testing hardcoded simulation section
+        Scheduler s;
+        Building b;
+        s = Injector.inject(Scheduler.class);
+        b = Injector.inject(Building.class);
+
+        s.addEventListener(b);
+        b.addEventListener(s);
+
+        Event ev = new GeneralEvent("StartingEvent", null, null, new TimeStamp(), Collections.emptyList());
+        s.scheduleEvent(ev);
+
+        Room hall = new CommonRoom("Hallway", 200, 10000);
+        Room enterance = b.getRoomList().get(0);
+        b.connectNewRoom(enterance, hall);
+
+        Entity senzor = new MovementSenzor("Senzor1");
+        hall.addEntity(senzor);
     }
 
 }

@@ -8,7 +8,6 @@ package simulator.entities;
 
 import simulator.entities.actions.Action;
 import simulator.environement.rooms.Room;
-import simulator.eventHandling.Event;
 import simulator.eventHandling.EventInvoker;
 import simulator.eventHandling.EventListener;
 
@@ -18,9 +17,9 @@ import simulator.eventHandling.EventListener;
  */
 public interface Entity extends EventInvoker, EventListener {
 
+    public String getId();
     public String getType();
     public Room getLocation();
+    public void setLocation(Room r);
     public boolean performeAction(Action act);
-    public void preciveEvent(Event ev);
-
 }

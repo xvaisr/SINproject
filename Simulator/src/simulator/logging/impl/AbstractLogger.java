@@ -110,22 +110,7 @@ public abstract class AbstractLogger implements SimulationLogger {
     }
 
     private String publicFormatter(String format, Object[] args) {
-        this.msg.setLength(0);
-
-        for (int index = 0, n = 0; index >= 0 && index < format.length() && n < args.length; n++) {
-            int match = format.indexOf("#",index);
-            if (match > 0) {
-                this.msg.append(format.substring(index, match));
-                this.msg.append(args[n].toString());
-                index = match + 1;
-            }
-            else {
-                this.msg.append(format.substring(index));
-                index = match;
-            }
-        }
-
-        return this.msg.toString();
+        return String.format(format, args);
     }
 
     @Override

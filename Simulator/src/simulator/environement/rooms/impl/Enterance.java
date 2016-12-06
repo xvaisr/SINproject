@@ -11,8 +11,8 @@ import java.util.Collections;
 import java.util.List;
 import simulator.entities.Entity;
 import simulator.environement.rooms.AbstractRoom;
-import simulator.environement.rooms.Room;
 import simulator.eventHandling.Event;
+import simulator.eventHandling.EventFilter;
 
 /**
  *
@@ -21,7 +21,7 @@ import simulator.eventHandling.Event;
 public class Enterance extends AbstractRoom {
 
     @Override
-    public String getID() {
+    public String getId() {
         return "Enterance";
     }
 
@@ -51,8 +51,27 @@ public class Enterance extends AbstractRoom {
     }
 
     @Override
-    public void precieveEvent(Event ev) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void perceiveEvent(Event ev) {
+    }
+
+    @Override
+    public boolean getHasDoor() {
+        return true;
+    }
+
+    @Override
+    public boolean getDoorOpened() {
+        return false;
+    }
+
+    @Override
+    public boolean setDoorOpened(boolean open) {
+        return false;
+    }
+
+    @Override
+    public boolean addEventFilter(EventFilter f) {
+        return false;
     }
 
 }

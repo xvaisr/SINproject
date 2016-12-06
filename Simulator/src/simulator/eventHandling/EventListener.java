@@ -12,5 +12,6 @@ package simulator.eventHandling;
  */
 public interface EventListener {
 
-    public void precieveEvent(Event ev);
+    public void perceiveEvent(Event ev);
+    public boolean addEventFilter(EventFilter f);
 }

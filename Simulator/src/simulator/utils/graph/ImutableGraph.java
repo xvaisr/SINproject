@@ -6,12 +6,18 @@
 
 package simulator.utils.graph;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  *
  * @author Roman Vais
  */
-public interface Graph<T> extends ImutableGraph<T>{
-    public void linkObject(Node <T> root, T object);
-    public void linkNode(Node <T> root, Node <T> node);
+public interface ImutableGraph<T> {
+
+    public Node<T> getRoot();
+    public List<Edge<T>> getEdgesLinkedTo(Node<T> node);
+    public List<Node<T>> getAllNodes();
 
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import simulator.entities.Entity;
 import simulator.environement.rooms.AbstractRoom;
 import simulator.eventHandling.Event;
+import simulator.eventHandling.EventFilter;
 
 /**
  *
@@ -23,17 +24,19 @@ public class Staircase extends AbstractRoom {
     private final String name;
     private final Dimension size;
     private final List<Entity> entList;
+    private final List<EventFilter> filters;
 
     public Staircase() {
         this.name = this.getClass().getSimpleName();
         this.size = new Dimension(150, 1000);
         this.entList = new LinkedList<>();
+        this.filters = new LinkedList<>();
     }
 
 
 
     @Override
-    public String getID() {
+    public String getId() {
          return this.name + " " + this.hashCode();
     }
 
@@ -67,8 +70,38 @@ public class Staircase extends AbstractRoom {
     }
 
     @Override
-    public void precieveEvent(Event ev) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean getHasDoor() {
+        return false;
     }
 
+    @Override
+    public boolean getDoorOpened() {
+        return true;
+    }
+
+    @Override
+    public boolean setDoorOpened(boolean open) {
+        return true;
+    }
+
+    @Override
+    public void perceiveEvent(Event ev) {
+        for (EventFilter f : this.filters) {
+            if(!f.eventPass(ev)) {
+                return;
+            }
+        }
+        for (Entity ent : this.entList) {
+            ent.perceiveEvent(ev);
+        }
+    }
+
+    @Override
+    public boolean addEventFilter(EventFilter f) {
+        if (this.filters.contains(f)) {
+            return false;
+        }
+        this.filters.add(f);
+        return true;
+    }
 }

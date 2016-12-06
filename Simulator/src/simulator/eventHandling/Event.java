@@ -20,10 +20,14 @@ public interface Event {
     public String getType();
     public Entity getSourceEntity();
     public <T> T getSourceEntity(Class<T> inf);
+    public Entity getTargetEntity();
+    public <T> T getTargetEntity(Class<T> inf);
     public TimeStamp getTimestamp();
     public List<Action> getActionList();
-    public void setScheduled();
+    public void setScheduledTo(TimeStamp ts);
+    public void setCancle();
     public boolean getIsScheduled();
+    public boolean getIsCancled();
 
 
 

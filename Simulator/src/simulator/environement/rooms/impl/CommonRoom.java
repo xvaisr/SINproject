@@ -13,6 +13,7 @@ import java.util.List;
 import simulator.entities.Entity;
 import simulator.environement.rooms.AbstractRoom;
 import simulator.eventHandling.Event;
+import simulator.eventHandling.EventFilter;
 
 /**
  *
@@ -20,19 +21,21 @@ import simulator.eventHandling.Event;
  */
 public class CommonRoom extends AbstractRoom {
 
+    private boolean door;
     private final String name;
     private final Dimension size;
     private final List<Entity> entList;
+    private final List<EventFilter> filters;
 
     public CommonRoom(String name, int width, int lenght) {
         this.name = name;
         this.size = new Dimension(width, lenght);
         this.entList = new LinkedList<>();
-
+        this.filters = new LinkedList<>();
     }
 
     @Override
-    public String getID() {
+    public String getId() {
         return this.name;
     }
 
@@ -55,6 +58,7 @@ public class CommonRoom extends AbstractRoom {
     public boolean addEntity(Entity ent) {
         if (!this.entList.contains(ent)) {
             this.entList.add(ent);
+            ent.addEventListener(this);
         }
 
         return true;
@@ -66,8 +70,57 @@ public class CommonRoom extends AbstractRoom {
     }
 
     @Override
-    public void precieveEvent(Event ev) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void fireEvent(Event ev) {
+        if (!ev.getIsScheduled()) {
+            super.fireEvent(ev);
+            return;
+        }
+
+        List<Entity> listeners;
+        synchronized(this.entList) {
+            listeners = Collections.unmodifiableList(this.entList);
+        }
+        for (Entity ent : listeners) {
+            ent.perceiveEvent(ev);
+        }
+    }
+
+    @Override
+    public void perceiveEvent(Event ev) {
+        for (EventFilter f : this.filters) {
+            if(!f.eventPass(ev)) {
+                return;
+            }
+        }
+        for (Entity ent : this.entList) {
+            ent.perceiveEvent(ev);
+        }
+    }
+
+    @Override
+    public boolean addEventFilter(EventFilter f) {
+        if (this.filters.contains(f)) {
+            return false;
+        }
+        this.filters.add(f);
+        return true;
+    }
+
+    @Override
+    public boolean getHasDoor() {
+        return true;
+    }
+
+    @Override
+    public boolean getDoorOpened() {
+        return this.door;
+    }
+
+    @Override
+    public boolean setDoorOpened(boolean open) {
+        boolean d = this.door;
+        this.door = open;
+        return d;
     }
 
 }

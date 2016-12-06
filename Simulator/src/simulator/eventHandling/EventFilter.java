@@ -10,6 +10,8 @@ package simulator.eventHandling;
  *
  * @author Roman Vais
  */
-public class EventGenerator {
+public interface EventFilter {
+
+    public boolean eventPass(Event ev);
 
 }

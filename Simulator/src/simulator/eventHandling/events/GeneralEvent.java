@@ -13,6 +13,9 @@ import java.util.List;
 import simulator.entities.Entity;
 import simulator.entities.actions.Action;
 import simulator.eventHandling.Event;
+import simulator.injection.impl.Injector;
+import simulator.logging.LoggerFactory;
+import simulator.logging.SimulationLogger;
 import simulator.utils.modeltime.TimeStamp;
 
 /**
@@ -21,18 +24,26 @@ import simulator.utils.modeltime.TimeStamp;
  */
 public class GeneralEvent implements Event {
 
-    private String type;
+    private final String type;
     private final Entity source;
-    private final TimeStamp timestamp;
-    private List<Action> actl;
+    private TimeStamp timestamp;
+    private final List<Action> actl;
     private boolean schceduled;
+    private boolean cancled;
+    private final Entity target;
+    private final SimulationLogger logger;
 
-    public GeneralEvent(String type, Entity ent, TimeStamp timestamp, Collection<Action> actions) {
-        this.source = ent;
+    public GeneralEvent(String type, Entity src, Entity tg, TimeStamp timestamp, Collection<Action> actions) {
+        this.source = src;
+        this.target = tg;
         this.timestamp = timestamp;
         this.actl = new LinkedList<>(actions);
         this.type = type;
         this.schceduled = false;
+        this.cancled = false;
+
+        this.logger = Injector.inject(LoggerFactory.class).getLogger("Events");
+        logger.logDebug("New event of '" + this.type + "' type created.");
     }
 
     @Override
@@ -54,6 +65,19 @@ public class GeneralEvent implements Event {
     }
 
     @Override
+    public Entity getTargetEntity() {
+        return this.target;
+    }
+
+    @Override
+    public <T> T getTargetEntity(Class<T> inf) {
+        if (inf.isInstance(this.target)) {
+            return inf.cast(this.target);
+        }
+        return null;
+    }
+
+    @Override
     public TimeStamp getTimestamp() {
         return this.timestamp;
     }
@@ -64,13 +88,25 @@ public class GeneralEvent implements Event {
     }
 
     @Override
-    public void setScheduled() {
+    public void setScheduledTo(TimeStamp ts) {
+        if (this.schceduled == true || this.timestamp.compareTo(ts) > 0) return;
         this.schceduled = true;
+        this.timestamp = ts;
     }
 
     @Override
     public boolean getIsScheduled() {
         return this.schceduled;
+    }
+
+    @Override
+    public void setCancle() {
+        this.cancled = true;
+    }
+
+    @Override
+    public boolean getIsCancled() {
+        return this.cancled;
     }
 
 }

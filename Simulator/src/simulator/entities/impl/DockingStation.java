@@ -11,7 +11,7 @@ import simulator.entities.Entity;
 import simulator.entities.actions.Action;
 import simulator.environement.rooms.Room;
 import simulator.eventHandling.Event;
-import simulator.eventHandling.EventListener;
+import simulator.eventHandling.EventFilter;
 
 /**
  *
@@ -46,7 +46,7 @@ public class DockingStation extends AbstractEntity {
 
     @Override
     public String toString() {
-        return "Station:" + String.valueOf(this.id);
+        return this.getId();
     }
 
 
@@ -57,18 +57,23 @@ public class DockingStation extends AbstractEntity {
     }
 
     @Override
-    public void preciveEvent(Event ev) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public Room getLocation() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void precieveEvent(Event ev) {
+    public void perceiveEvent(Event ev) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean addEventFilter(EventFilter f) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getId() {
+        return this.getType() + String.valueOf(this.id);
     }
 
 

@@ -6,9 +6,14 @@
 
 package simulator.entities;
 
+import java.awt.Robot;
 import java.util.LinkedList;
+import simulator.environement.rooms.Room;
 import simulator.eventHandling.Event;
 import simulator.eventHandling.EventListener;
+import simulator.injection.impl.Injector;
+import simulator.logging.LoggerFactory;
+import simulator.logging.SimulationLogger;
 
 /**
  *
@@ -17,14 +22,33 @@ import simulator.eventHandling.EventListener;
 public abstract class AbstractEntity implements Entity {
 
     private final LinkedList<EventListener> listeners;
+    protected final SimulationLogger logger;
+    protected Room location;
 
     public AbstractEntity() {
         this.listeners = new LinkedList<>();
+
+        this.logger = Injector.inject(LoggerFactory.class).getLogger(this.getClass());
+        logger.logDebug("Entity '" + this.getType() + "' created!");
+        this.location = null;
+    }
+
+    @Override
+    public Room getLocation() {
+        return this.location;
+    }
+
+    @Override
+    public void setLocation(Room r) {
+        if (r != null) {
+            this.location = r;
+            this.logger.logSimulation("Location of '" + this.getId() + "' has changed to '" + r.getId() + "' room." );
+        }
     }
 
     @Override
     public String getType() {
-        return this.getClass().getName();
+        return this.getClass().getSimpleName();
     }
 
     @Override
@@ -44,7 +68,7 @@ public abstract class AbstractEntity implements Entity {
     @Override
     public void fireEvent(Event ev) {
         for (EventListener listener : this.listeners) {
-            listener.precieveEvent(ev);
+            listener.perceiveEvent(ev);
         }
     }
 

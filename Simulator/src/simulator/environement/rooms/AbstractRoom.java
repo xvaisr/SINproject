@@ -8,6 +8,7 @@ package simulator.environement.rooms;
 
 import java.util.LinkedList;
 import simulator.eventHandling.Event;
+import simulator.eventHandling.EventFilter;
 import simulator.eventHandling.EventInvoker;
 import simulator.eventHandling.EventListener;
 
@@ -26,28 +27,30 @@ public abstract class AbstractRoom implements Room, EventInvoker, EventListener 
 
     @Override
     public void addEventListener(EventListener li) {
-        synchronized(this.listeners) {
-            if (this.listeners.contains(li)) {
-                return;
-            }
-
-            this.listeners.add(li);
+        if (this.listeners.contains(li)) {
+            return;
         }
+
+        this.listeners.add(li);
     }
 
     @Override
     public void removeEventListener(EventListener li) {
-        synchronized(this.listeners) {
-            this.listeners.remove(li);
-        }
+        this.listeners.remove(li);
     }
 
     @Override
     public void fireEvent(Event ev) {
-        synchronized(this.listeners) {
-            for (EventListener listener : this.listeners) {
-                listener.precieveEvent(ev);
-            }
+        for (EventListener listener : this.listeners) {
+            listener.perceiveEvent(ev);
+        }
+    }
+
+    protected class ScheduledFilter implements EventFilter {
+
+        @Override
+        public boolean eventPass(Event ev) {
+            return ev.getIsScheduled();
         }
     }
 

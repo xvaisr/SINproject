@@ -56,7 +56,7 @@ public final class TimeStamp implements Comparable<TimeStamp>{
         this.stamp = 0;
 
         if (stamp != null) {
-            this.stamp += stamp.getTimestamp();
+            this.stamp += stamp.getTime();
         }
 
         for (int i = 0; i < DIVIDERS.length && i < args.length; i++) {
@@ -64,7 +64,7 @@ public final class TimeStamp implements Comparable<TimeStamp>{
         }
     }
 
-    public int getTimestamp() {
+    public int getTime() {
         return this.stamp;
     }
 
@@ -77,14 +77,14 @@ public final class TimeStamp implements Comparable<TimeStamp>{
 
         d[0] += referenceYear;
 
-        return String.format("%4d_%2d_%2d %2d:%2d:%2d", d[YEAR], d[MONTH], d[DAY], d[HOUR], d[MIN], d[SEC]);
+        return String.format("%04d_%02d_%02d %02d:%02d:%02d", d[YEAR], d[MONTH], d[DAY], d[HOUR], d[MIN], d[SEC]);
     }
 
     public Integer getDatePart(int part) {
         int rest = this.stamp;
         int result = 0;
 
-        for (int i = 0; i <= part; i++) {
+        for (int i = 0; i < part; i++) {
             result = rest / DIVIDERS[i];
             rest = rest % DIVIDERS[i];
         }
@@ -92,6 +92,13 @@ public final class TimeStamp implements Comparable<TimeStamp>{
         return result;
     }
 
+    public TimeStamp getIncreasedTimeStamp(TimeStamp stamp) {
+        return new TimeStamp(this, stamp.getTime());
+    }
+
+    public TimeStamp getIncreasedTimeStamp(int sec) {
+        return new TimeStamp(this, sec);
+    }
 
     @Override
     public String toString() {
@@ -109,12 +116,12 @@ public final class TimeStamp implements Comparable<TimeStamp>{
 
     @Override
     public int hashCode() {
-        return this.getTimestamp();
+        return this.getTime();
     }
 
     @Override
     public int compareTo(TimeStamp t) {
-        return this.stamp - t.getTimestamp();
+        return this.stamp - t.getTime();
     }
 
 

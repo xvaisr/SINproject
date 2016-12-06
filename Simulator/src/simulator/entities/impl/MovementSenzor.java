@@ -6,10 +6,13 @@
 
 package simulator.entities.impl;
 
+import com.sun.xml.internal.stream.EventFilterSupport;
 import simulator.entities.AbstractEntity;
 import simulator.entities.actions.Action;
+import simulator.entities.actions.common.MoveableEntity;
 import simulator.environement.rooms.Room;
 import simulator.eventHandling.Event;
+import simulator.eventHandling.EventFilter;
 
 /**
  *
@@ -17,14 +20,19 @@ import simulator.eventHandling.Event;
  */
 public class MovementSenzor extends AbstractEntity {
 
-    @Override
-    public boolean performeAction(Action act) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private final String[] ACCEPTED_EVENT_TYPES = {"StartingEvent", "Movement", "CommandSleep", "CommandWake"};
+
+    private final String id;
+    private
+
+    public MovementSenzor(String id) {
+        super();
+        this.id = id;
     }
 
     @Override
-    public void preciveEvent(Event ev) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getId() {
+        return this.id;
     }
 
     @Override
@@ -33,8 +41,54 @@ public class MovementSenzor extends AbstractEntity {
     }
 
     @Override
-    public void precieveEvent(Event ev) {
+    public boolean performeAction(Action act) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void perceiveEvent(Event ev) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean addEventFilter(EventFilter f) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private class TypeFilter implements EventFilter {
+
+        private String[] types;
+
+        public TypeFilter(String[] types) {
+            this.types = types;
+        }
+
+        @Override
+        public boolean eventPass(Event ev) {
+            boolean pass = false;
+            for (String type : this.types) {
+                pass = ev.getType().equals(type);
+                if (pass) break;
+            }
+            return pass;
+        }
+    }
+
+    private class MoveableFilter implements EventFilter {
+
+        private String type;
+
+        public MoveableFilter(String t) {
+            this.type = t;
+        }
+
+        @Override
+        public boolean eventPass(Event ev) {
+            if (!ev.getType().equals(this.type)) {
+                return true;
+            }
+
+            return ev.getSourceEntity(MoveableEntity.class) != null;
+        }
+    }
 }
