@@ -6,7 +6,11 @@
 package simulator;
 
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import simulator.entities.Entity;
+import simulator.entities.actions.Action;
+import simulator.entities.actions.common.StartEntity;
 import simulator.entities.impl.MovementSenzor;
 import simulator.environement.Building;
 import simulator.environement.rooms.Room;
@@ -18,6 +22,7 @@ import simulator.injection.impl.Injector;
 import simulator.logging.LoggerFactory;
 import simulator.logging.impl.SimulatorLoggerFactory;
 import simulator.utils.modeltime.TimeStamp;
+import simulator.entities.actions.common.StartEntity;
 
 /**
  *
@@ -67,6 +72,9 @@ public class Simulator {
         s.addEventListener(b);
         b.addEventListener(s);
 
+        List<Action> actl = new LinkedList<>();
+        actl.add(Injector.inject(StartEntity.class));
+
         Event ev = new GeneralEvent("StartingEvent", null, null, new TimeStamp(), Collections.emptyList());
         s.scheduleEvent(ev);
 
@@ -76,6 +84,8 @@ public class Simulator {
 
         Entity senzor = new MovementSenzor("Senzor1");
         hall.addEntity(senzor);
+
+        s.fireNextEvent();
     }
 
 }

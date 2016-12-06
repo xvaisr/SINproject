@@ -6,11 +6,9 @@
 
 package simulator.entities.impl;
 
-import com.sun.xml.internal.stream.EventFilterSupport;
 import simulator.entities.AbstractEntity;
 import simulator.entities.actions.Action;
 import simulator.entities.actions.common.MoveableEntity;
-import simulator.environement.rooms.Room;
 import simulator.eventHandling.Event;
 import simulator.eventHandling.EventFilter;
 
@@ -23,7 +21,6 @@ public class MovementSenzor extends AbstractEntity {
     private final String[] ACCEPTED_EVENT_TYPES = {"StartingEvent", "Movement", "CommandSleep", "CommandWake"};
 
     private final String id;
-    private
 
     public MovementSenzor(String id) {
         super();
@@ -36,23 +33,18 @@ public class MovementSenzor extends AbstractEntity {
     }
 
     @Override
-    public Room getLocation() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public boolean performeAction(Action act) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void perceiveEvent(Event ev) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override
     public boolean addEventFilter(EventFilter f) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void startEntity() {
+        this.logger.logSimulation("Senzor '" + this.getId() + "' is active.");
     }
 
     private class TypeFilter implements EventFilter {

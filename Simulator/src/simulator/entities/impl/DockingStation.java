@@ -9,9 +9,6 @@ package simulator.entities.impl;
 import simulator.entities.AbstractEntity;
 import simulator.entities.Entity;
 import simulator.entities.actions.Action;
-import simulator.environement.rooms.Room;
-import simulator.eventHandling.Event;
-import simulator.eventHandling.EventFilter;
 
 /**
  *
@@ -32,16 +29,13 @@ public class DockingStation extends AbstractEntity {
             return false;
         }
 
-        Action act = new Action() {
-            @Override
-            public boolean bePerformedBy(Entity ent) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        };
-
-        en.performeAction(act);
-
+        this.slot = en;
         return true;
+    }
+
+    @Override
+    public void startEntity() {
+        this.logger.logSimulation("Docking station '" + this.getId() + "' is active.");
     }
 
     @Override
@@ -49,31 +43,14 @@ public class DockingStation extends AbstractEntity {
         return this.getId();
     }
 
-
-
-    @Override
-    public boolean performeAction(Action act) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Room getLocation() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void perceiveEvent(Event ev) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean addEventFilter(EventFilter f) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @Override
     public String getId() {
         return this.getType() + String.valueOf(this.id);
+    }
+
+    @Override
+    public boolean performeAction(Action act) {
+        return false;
     }
 
 

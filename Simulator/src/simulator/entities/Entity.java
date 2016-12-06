@@ -22,4 +22,5 @@ public interface Entity extends EventInvoker, EventListener {
     public Room getLocation();
     public void setLocation(Room r);
     public boolean performeAction(Action act);
+    public void startEntity();
 }

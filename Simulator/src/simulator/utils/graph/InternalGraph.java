@@ -73,6 +73,9 @@ public class InternalGraph<T> implements Graph<T>{
     public List<Node<T>> getAllNodes() {
         List<Node<T>> nodeList = new LinkedList();
         nodeList.addAll(this.nodeMapings.keySet());
+        if (!nodeList.contains(this.root)) {
+            nodeList.add(this.root);
+        }
         return Collections.unmodifiableList(nodeList);
     }
 
