@@ -1,6 +1,6 @@
-package xrepik00.SINproject;
+package graphics;
 
-import xrepik00.SINproject.GUIobjects.Plan;
+import graphics.GUIobjects.Plan;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,18 +9,21 @@ import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import simulator.environement.Building;
+import simulator.eventHandling.EventListener;
+import simulator.injection.impl.Injector;
 
 /**
  * Created by trepik on 5.12.2016.
  */
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements EventListener {
 
     private final static int delay = 3;
     private JPanel GUI;
     private Plan plan;
     private List<String[]> events;
 
-    MainWindow(String n) {
+    public MainWindow(String n) {
         setTheFrameUp(n);
         initPlayer();
         plan.addKeyListener(new KeyAdapter() {
@@ -41,16 +44,8 @@ public class MainWindow extends JFrame {
         });
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                final MainWindow win = new MainWindow("SINproject");
-                win.showit();
-            }
-        });
-    }
-
     private void step() {
+
         if (this.events.isEmpty()) {
             return;
         }
@@ -122,7 +117,7 @@ public class MainWindow extends JFrame {
         }
     }
 
-    private void showit() {
+    public void showit() {
         this.setVisible(true);
     }
 
@@ -134,5 +129,17 @@ public class MainWindow extends JFrame {
         this.plan = (Plan) add(new Plan());
         this.plan.setFocusable(true);
         setExtendedState(Frame.MAXIMIZED_BOTH);
+    }
+
+    @Override
+    public void perceiveEvent(simulator.eventHandling.Event ev) {
+        // xvaisr00 pozn: tohle by melo ukladat event do nejake fronty, kterou si poto muzes zpracovat ve step(); metode
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean addEventFilter(simulator.eventHandling.EventFilter f) {
+        // xvaisr00 pozn: neni nutne implementovat pokud ti scheduler/controler preda jen ty eventy, ktere te zajimaji
+        return true;
     }
 }

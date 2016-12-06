@@ -5,13 +5,12 @@
  */
 package simulator;
 
-import graphics.MainWindow;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.SwingUtilities;
 import simulator.entities.Entity;
 import simulator.entities.actions.Action;
+import simulator.entities.actions.common.StartEntity;
 import simulator.entities.impl.MovementSenzor;
 import simulator.environement.Building;
 import simulator.environement.rooms.Room;
@@ -86,17 +85,6 @@ public class Simulator {
         Entity senzor = new MovementSenzor("Senzor1");
         hall.addEntity(senzor);
 
-        // GUI by se melo zobrazit az po te, co se inicializuje budova, aby byla jistota ze vsechna data budou k dispozici
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                final MainWindow win;
-                win = new MainWindow("SINproject");
-                win.showit();
-            }
-        });
-
-        // tohe bude za normalnich okolnosti volat controller, nebo to pojede v samostatnem vlakne a kalendar s controlerem
-        // na sebe budou vzjemne cekat
         s.fireNextEvent();
     }
 

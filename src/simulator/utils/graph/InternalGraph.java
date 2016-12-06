@@ -70,11 +70,6 @@ public class InternalGraph<T> implements Graph<T>{
     }
 
     @Override
-    public List<Edge<T>> getEdgesLinkedTo(T object) {
-        return getEdgesLinkedTo(new Node<>(object));
-    }
-
-    @Override
     public List<Node<T>> getAllNodes() {
         List<Node<T>> nodeList = new LinkedList();
         nodeList.addAll(this.nodeMapings.keySet());

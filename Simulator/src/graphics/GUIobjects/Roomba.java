@@ -1,4 +1,4 @@
-package xrepik00.SINproject.GUIobjects;
+package graphics.GUIobjects;
 
 import java.awt.*;
 

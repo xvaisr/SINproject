@@ -18,7 +18,6 @@ public interface ImutableGraph<T> {
 
     public Node<T> getRoot();
     public List<Edge<T>> getEdgesLinkedTo(Node<T> node);
-    public List<Edge<T>> getEdgesLinkedTo(T object);
     public List<Node<T>> getAllNodes();
 
 }
