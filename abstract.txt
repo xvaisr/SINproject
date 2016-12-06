@@ -1,0 +1,41 @@
+Řízení uklízecích robotů v prostředí IT firmy
+
+Zvolili jsme si za své zadání projektu "Model inteligentní budovy"
+(Zadání číslo 2) Náš projekt se zabívá simulací části prostředí inteligentní
+budovy, která je sídlem IT firmy. Projekt implementuje řídící systém a simulaci
+prostředí. Systém by měl být rozdělen na 2 až 3 části popsané níže.
+Součástí by měl být uživatelské rozhraní, umožňující měnit parametry modleu.
+Simulace bude samostatná od řídícího systému a proto obě aplikace budou mít
+svá vlastní rozhraní.
+
+Řídící system
+Bude umožňovat plánování a řízení úklidu pomocí robotů.
+Měl by fungovat jako centrální server sbírající data ze senzorů a od samotných
+robotů přítomných v budově. Tato data budou následně využitá pro optimalizaci
+úklidu a řízení samotných robotů. Na konkrétním způsobu implementace jsme se
+doposud neshodly.
+
+Simulace
+Simulované prostředí psané v čisté Javě případně v prostředí frameworku Jade.
+Bude simulovat na abstraktní úrovni chování senzorů a jednotlivích robotů.
+Reprezentace prostředí (opět na abstraktní úrovni) zadávaná parametricky
+bude samozřejmou součástí. Simulace bude s řídícím systémem komunikovat přes
+dedikované rozhraní.
+
+Generátor událostí
+Část systému kterou je možné implementovat samostatně, nebo jako součást obou
+předcházejících částí, kde si každá ponese vlastní generátor. Generátor by měl
+systematicky vytvářet události které budou měnit reprezentaci prostředí,
+jinými slovy vytváření nepořádku, přeskopování nábytku jako jsou židle nebo
+stolky, pohyb osob v prostorách budovy apod. Dále by měl spouštět řídícím
+systémem plánované úkoly.
+
+Jakékoliv změny oproti tomuto abstraktu a případné další podrobnosti je kdykoliv
+možné sledovat na adrese https://github.com/xvaisr/SINproject, kde budeme pravidelně
+aktualizovat soubor readme, tak jak bude probíhat řešení projektu.
+
+Účastníci na projektu:
+Roman Vais    - xvaisr00 (vedoucí)
+Tomáš Repík   - xrepik00
+Ondřej Blucha - xrepik00
+
