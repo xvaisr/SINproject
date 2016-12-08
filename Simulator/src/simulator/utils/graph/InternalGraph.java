@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
+ * Implementation of general type of graph that requires unique values to be inserted.
  * @author Roman Vais
  * @param <T>
  */
@@ -67,6 +67,11 @@ public class InternalGraph<T> implements Graph<T>{
             return Collections.unmodifiableList(this.nodeMapings.get(node));
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public List<Edge<T>> getEdgesLinkedTo(T object) {
+        return this.getEdgesLinkedTo(new Node<>(object));
     }
 
     @Override
