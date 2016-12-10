@@ -6,7 +6,6 @@
 
 package simulator.entities;
 
-import java.awt.Robot;
 import java.util.LinkedList;
 import java.util.List;
 import simulator.entities.actions.Action;
@@ -34,7 +33,7 @@ public abstract class AbstractEntity implements Entity {
         this.filters = new LinkedList<>();
 
         this.logger = Injector.inject(LoggerFactory.class).getLogger(this.getClass());
-        logger.logDebug("Entity '" + this.getType() + "' created!");
+        logger.logDebug("Entity '%s' created!", this.getType());
         this.location = null;
     }
 
@@ -46,8 +45,10 @@ public abstract class AbstractEntity implements Entity {
     @Override
     public void setLocation(Room r) {
         if (r != null) {
+            this.location.removeEntity(this);
             this.location = r;
-            this.logger.logSimulation("Location of '" + this.getId() + "' has changed to '" + r.getId() + "' room." );
+            r.addEntity(this);
+            this.logger.logSimulation("Location of '%s' has changed to '%s' room.", this.getId(), r.getId());
         }
     }
 
@@ -81,7 +82,7 @@ public abstract class AbstractEntity implements Entity {
     public void perceiveEvent(Event ev) {
         for (EventFilter f : this.filters) {
             if(!f.eventPass(ev)) {
-                this.logger.logDebug("Event '" + ev.getType() + "' did not pass filter. Skipping...");
+                this.logger.logDebug("Event '%s' did not pass filter. Skipping...", ev.getType());
                 return;
             }
         }
@@ -89,7 +90,8 @@ public abstract class AbstractEntity implements Entity {
         this.logger.log(ev.toString());
         List<Action> acts = ev.getActionList();
         for (Action act : acts) {
-            this.performeAction(act);
+            boolean sc = this.performeAction(act);
+            this.logger.logSimulation("Action '%s' result: %s", act.getClass().getSimpleName(), sc);
         }
     }
 
@@ -100,6 +102,11 @@ public abstract class AbstractEntity implements Entity {
         }
         this.filters.add(f);
         return true;
+    }
+
+    @Override
+    public boolean performeAction(Action act) {
+        return act.bePerformedBy(this);
     }
 
 }

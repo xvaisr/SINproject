@@ -20,9 +20,10 @@ public interface MoveableEntity extends Entity {
     /**
      * Changes the room in which this entity is currently located.
      *
-     * @param r room form model representation
+     * @param roomID ID string of room form model representation
+     * @return false if can't change room for some reason
      */
-    public void changeRoom(Room r);
+    public boolean changeRoom(String roomID);
 
     /**
      * Performs planning of several events that gradually change the location of this entity. Entity will plan
