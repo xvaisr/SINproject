@@ -16,7 +16,7 @@ package simulator.utils.graph;
  * @author Roman Vais
  */
 
-public interface Graph<T> extends ImutableGraph<T>{
+public interface Graph<T> extends ImmutableGraph<T> {
 
     /**
      * Method links new node containing given object with edge to already existing node.

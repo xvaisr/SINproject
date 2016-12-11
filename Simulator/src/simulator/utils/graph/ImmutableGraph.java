@@ -11,13 +11,13 @@ import java.util.List;
 /**
  * Interface representing common type of graph, where nodes contain given type of object.
  * Depending on implementation, graph can be oriented with directional edges or general graph
- * with bidirectional edges. ImutableGraph interface doesn't expose implementation of methods
+ * with bidirectional edges. ImmutableGraph interface doesn't expose implementation of methods
  * that can modify graph.
  * @param <T> values
  *
  * @author Roman Vais
  */
-public interface ImutableGraph<T> {
+public interface ImmutableGraph<T> {
 
     /**
      * Returns root node of the graph.

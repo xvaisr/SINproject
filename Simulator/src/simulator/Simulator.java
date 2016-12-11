@@ -8,6 +8,8 @@ package simulator;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import graphics.MainWindow;
 import simulator.entities.Entity;
 import simulator.entities.actions.Action;
 import simulator.entities.actions.common.StartEntity;
@@ -22,7 +24,8 @@ import simulator.injection.impl.Injector;
 import simulator.logging.LoggerFactory;
 import simulator.logging.impl.SimulatorLoggerFactory;
 import simulator.utils.modeltime.TimeStamp;
-import simulator.entities.actions.common.StartEntity;
+
+import javax.swing.*;
 
 /**
  *
@@ -79,11 +82,19 @@ public class Simulator {
         s.scheduleEvent(ev);
 
         Room hall = new CommonRoom("Hallway", 200, 10000);
-        Room enterance = b.getRoomList().get(0);
-        b.connectNewRoom(enterance, hall);
+        Room entrance = b.getRoomList().get(0);
+        b.connectNewRoom(entrance, hall);
 
-        Entity senzor = new MovementSenzor("Senzor1");
-        hall.addEntity(senzor);
+        Entity sensor = new MovementSenzor("Sensor1");
+        hall.addEntity(sensor);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                final MainWindow win;
+                win = new MainWindow("SINproject");
+                win.setVisible(true);
+            }
+        });
 
         s.fireNextEvent();
     }
