@@ -77,8 +77,8 @@ public class Plan extends JPanel {
 
             for (Edge<simulator.environement.rooms.Room> ed : edges) {
                 simulator.environement.rooms.Room r1, r2;
-                r1 = (simulator.environement.rooms.Room) ed.getNode(false);
-                r2 = (simulator.environement.rooms.Room) ed.getNode(true);
+                r1 = ed.getNode(false).getObject();
+                r2 = ed.getNode(true).getObject();
 
                 if (r == r1) {
                     addRoom(r1.getId(), r2.getId(), r2.getSurfaceArea());
