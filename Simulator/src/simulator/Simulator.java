@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 import simulator.entities.Entity;
 import simulator.entities.actions.Action;
-import simulator.entities.actions.common.StartEntity;
 import simulator.entities.impl.MovementSenzor;
 import simulator.environement.Building;
 import simulator.environement.rooms.Room;
