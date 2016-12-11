@@ -1,17 +1,18 @@
 package graphics.GUIobjects;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import simulator.entities.Entity;
 import simulator.entities.impl.DockingStation;
 import simulator.environement.Building;
 import simulator.injection.impl.Injector;
 import simulator.utils.graph.Edge;
-import simulator.utils.graph.ImutableGraph;
+import simulator.utils.graph.ImmutableGraph;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.List;
 
 /**
  * Created by trepik on 5.12.2016.
@@ -25,8 +26,6 @@ public class Plan extends JPanel {
     private Map<String, Door> doors;
     private int slotsInColumns;
     private int slotsInRows;
-
-    // xvaisr00 pozn: nevim k cemu slouzi nasledujici pole, alokovat je takto staticky asi nebude vhodne
     private int[] dx = {0, 1, 1, 1, 0, -1, -1, -1, -1, 0, 1, 2, 2, 2, 2, 2};
     private int[] dy = {-1, -1, 0, 1, 1, 1, 0, -1, -2, -2, -2, -2, -1, 0, 1, 2};
 
@@ -43,8 +42,6 @@ public class Plan extends JPanel {
     }
 
     private Slot[] initSlots() {
-        // xvaisr00 pozn: nvm jak pracujes s temi sloty nemodifikoval jsem
-
         this.slotsInRows = this.getHeight() / slotSize;
         this.slotsInColumns = this.getWidth() / slotSize;
         Slot[] a = new Slot[this.slotsInColumns * this.slotsInRows];
@@ -62,19 +59,17 @@ public class Plan extends JPanel {
     }
 
     private void initBuilding() {
-        // xvaisr00 pozn: Takto nejak by mela vypadat inicializace budovy v grafickem rozhranni
-        // TODO: vyresit konflikt jmen trid reprezentujicich entity v grafice a v modelu
 
         Building b = Injector.inject(Building.class);
         List<simulator.environement.rooms.Room> roomList;
-        ImutableGraph<simulator.environement.rooms.Room> schema;
+        ImmutableGraph<simulator.environement.rooms.Room> schema;
 
-        roomList = (List<simulator.environement.rooms.Room>) b.getRoomList();
+        roomList = b.getRoomList();
         schema = b.getRoomSchema();
 
-        simulator.environement.rooms.Room enterance;
-        enterance = b.getRoomSchema().getRoot().getObject();
-        addEntrance(enterance.getId(), enterance.getSurfaceArea() + 50);
+        simulator.environement.rooms.Room entrance;
+        entrance = b.getRoomSchema().getRoot().getObject();
+        addEntrance(entrance.getId(), entrance.getSurfaceArea() + 50);
 
         for (simulator.environement.rooms.Room r : roomList) {
             List<Edge<simulator.environement.rooms.Room>> edges;
@@ -82,8 +77,8 @@ public class Plan extends JPanel {
 
             for (Edge<simulator.environement.rooms.Room> ed : edges) {
                 simulator.environement.rooms.Room r1, r2;
-                r1 = (simulator.environement.rooms.Room) ed.getNode(false);
-                r2 = (simulator.environement.rooms.Room) ed.getNode(true);
+                r1 = ed.getNode(false).getObject();
+                r2 = ed.getNode(true).getObject();
 
                 if (r == r1) {
                     addRoom(r1.getId(), r2.getId(), r2.getSurfaceArea());
@@ -104,19 +99,16 @@ public class Plan extends JPanel {
                 }
             }
         }
-
-        /*
-        addEntrance("1", 50);
-        addRoom("1", "2", 30);
-        addRoom("1", "3", 50);
-        addRoom("2", "4", 25);
-        addRoom("4", "5", 35);
-        addRoom("1", "6", 53);
-        addRoom("1", "7", 42);
-        addStation("X", "1");
-        addStation("Y", "5");
-        placeRoomba("A", "X");
-        */
+//        addEntrance("1", 50);
+//        addRoom("1", "2", 30);
+//        addRoom("1", "3", 50);
+//        addRoom("2", "4", 25);
+//        addRoom("4", "5", 35);
+//        addRoom("1", "6", 53);
+//        addRoom("1", "7", 42);
+//        addStation("X", "1");
+//        addStation("Y", "5");
+//        placeRoomba("A", "X");
     }
 
     private void addEntrance(String id, int area) {

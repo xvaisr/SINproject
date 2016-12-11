@@ -8,8 +8,6 @@ package simulator.entities.impl;
 
 import simulator.entities.AbstractEntity;
 import simulator.entities.Entity;
-import simulator.entities.actions.Action;
-
 /**
  *
  * @author Roman Vais
@@ -17,11 +15,16 @@ import simulator.entities.actions.Action;
 public class DockingStation extends AbstractEntity {
 
     private final int id;
-    private Entity slot;
+    private Roomba slot;
     private boolean functional;
+    private final double chargeRate; // miliapers per second provided
+
 
     public DockingStation(int id) {
+        super();
         this.id = id;
+        this.functional = true;
+        this.chargeRate = 1250 / 3600.0;// 12500 mA in duration of 3600 sec
     }
 
     public boolean dockEntity(Entity en) {
@@ -29,8 +32,37 @@ public class DockingStation extends AbstractEntity {
             return false;
         }
 
-        this.slot = en;
+        this.slot =  (Roomba) en;
         return true;
+    }
+
+    public int getCharge(int sec) {
+        // to simulate small differences in charging
+        double charge = this.chargeRate + ((Math.random() - 0.5) / 10);
+        return (int) Math.round(sec * charge);
+    }
+
+    public boolean undockEntity() {
+        this.slot = null;
+        return true;
+    }
+
+    public boolean disableSelf() {
+        if (this.functional == true) {
+            this.functional = false;
+        }
+        return !this.functional;
+    }
+
+    public boolean enableSelf() {
+        if (this.functional == false) {
+            this.functional = true;
+        }
+        return !this.functional;
+    }
+
+    public Roomba getRoombaInSlot() {
+        return this.slot;
     }
 
     @Override
@@ -47,14 +79,4 @@ public class DockingStation extends AbstractEntity {
     public String getId() {
         return this.getType() + String.valueOf(this.id);
     }
-
-    @Override
-    public boolean performeAction(Action act) {
-        return false;
-    }
-
-
-
-
-
 }

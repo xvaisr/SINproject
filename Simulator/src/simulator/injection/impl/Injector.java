@@ -20,6 +20,13 @@ import simulator.logging.SimulationLogger;
 import simulator.logging.impl.SystemLogger;
 
 /**
+ * Class implementing on of the parts of a dependency injection framework. Similar functionality to
+ * Google Guice framework but much simpler and much less powerful. All binding needs to be done manually.
+ * Class is implemented as "true singleton" and you can't create (or get for that matter) it's instance.
+ * All access is provided by static methods. First thing you need to do for this to work is provide bindings
+ * for interfaces and classes that are supposed to implement them. Implementing classes must have constructor
+ * without arguments. Otherwise this dependency injection won't be able to crate new instances. All the binding
+ * has to be done in Main method and must be it's first code.
  *
  * @author Roman Vais
  */
@@ -44,6 +51,12 @@ public class Injector {
                 SimulationLogger.LogLevel.DEBUG);
     }
 
+    /**
+     * Method that is part of a bootstrap and injects binded instance of a logger to Injector class.
+     * First bind the interface LoggerFactory with its implementing class. Then you can call this method
+     * and continue bootstrapping other interfaces.
+     * @return true if successful, false otherwise
+     */
     public static boolean selfinjectLogger() {
         LoggerFactory factory = inject(LoggerFactory.class, DEFAULT_NAME);
         if (factory == null) {
@@ -55,18 +68,62 @@ public class Injector {
         return true;
     }
 
+    /**
+     * Method that serves as main mechanism of the dependency injection to get new instances.
+     * Pass class object (Interface.class) of an interface that has been binded by Injector
+     * with it's implementation. This method creates instance of implementing class and returns it.
+     * @param clazz Class object representing interface that you wish to gain instance of.
+     * @return true if successful, false otherwise
+     */
     public static <T> T inject(Class<T> clazz) {
         return Injector.instance.getInstance(clazz, Injector.DEFAULT_NAME);
     }
 
+    /**
+     * Method that serves as main mechanism of the dependency injection to get new instances.
+     * Pass class object (Interface.class) of an interface that has been binded by Injector
+     * with it's implementation. This method creates instance of implementing class and returns it.
+     * Some interfaces might have multiple implementing classes. @Named annotation in declaration
+     * of these implementing classes serves to distinguish between them. If you use have multiple
+     * implementations binded or @Named annotation is used, this method provides means to gain the
+     * implementation.
+     * @param clazz Class object representing interface that you wish to gain instance of.
+     * @param named name of the implementation you wish to use (name provided by @Named annotation)
+     * @return true if successful, false otherwise
+     */
     public static <T> T inject(Class<T> clazz, String named) {
         return Injector.instance.getInstance(clazz, named);
     }
 
+    /**
+     * Method that serves as main mechanism of the dependency binding interface with it's implementation.
+     * Pass class object (Interface.class) of an interface and of the Implementing class (MyClass.class).
+     * If your implementing class uses @Named annotation, it's name is detected through java reflection and
+     * multiple implementations can be binded for single interface. If You bind multiple implementations
+     * without @Named annotation, behavior is undefined. All implementing classes must have parameter-less
+     * constructor. Otherwise Injector wont be able to create their instance.
+     * @param inf Class object representing interface that you wish to bind to specific implementation.
+     * @param clazz Class object representing interface implementing class.
+     * @return true if successful, false otherwise
+     */
     public static boolean bind(Class<?> inf, Class<?> clazz) {
         return Injector.instance.bindClass(inf, clazz);
     }
 
+    /**
+     * Method that serves as main mechanism of the dependency binding interface with it's implementation and
+     * singleton instance. Pass class object (Interface.class) of an interface, of the singleton implementing class
+     * (MySingletonClass.class) and existing instance of that class. If your implementing class uses @Named annotation,
+     * it's name is detected through java reflection and multiple implementations can be binded for single interface.
+     * If You bind multiple implementations without @Named annotation, behavior is undefined. All implementing classes
+     * must have parameter-less constructor. Otherwise Injector wont be able to create their instance.
+     * If you use @Singleton annotation with the class, you might want to provide already preset instance for
+     * Injector to use. This should be method of your choosing.
+     * @param inf Class object representing interface that you wish to bind to specific implementation.
+     * @param clazz Class object representing interface implementing class.
+     * @param inst instance of singleton class that you wish Injector to be providing
+     * @return true if successful, false otherwise
+     */
     public static boolean bind(Class<?> inf, Class<?> clazz, Object inst) {
         boolean bindedClass = Injector.instance.bindClass(inf, clazz);
         if (bindedClass) {

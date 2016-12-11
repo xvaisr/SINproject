@@ -12,6 +12,18 @@ package simulator.eventHandling;
  */
 public interface EventListener {
 
+    /**
+     * Method called by EventInvoker upon event occurring.
+     *
+     * @param  ev occurring event
+     */
     public void perceiveEvent(Event ev);
+
+    /**
+     * Adds filter to events that are accepted
+     *
+     * @param  f EventFilter implementation
+     * @return returns true if filter could be added. false otherwise
+     */
     public boolean addEventFilter(EventFilter f);
 }

@@ -19,11 +19,11 @@ public class Door {
                 this.r2.getSlot().getX(), this.r2.getSlot().getY());
     }
 
-    public Slot getCords1() {
+    public Slot getSlot1() {
         return r1.getSlot();
     }
 
-    public Slot getCords2() {
+    public Slot getSlot2() {
         return r2.getSlot();
     }
 }

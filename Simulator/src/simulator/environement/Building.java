@@ -20,7 +20,7 @@ import simulator.injection.Singleton;
 import simulator.injection.impl.Injector;
 import simulator.logging.LoggerFactory;
 import simulator.logging.SimulationLogger;
-import simulator.utils.graph.ImutableGraph;
+import simulator.utils.graph.ImmutableGraph;
 import simulator.utils.graph.InternalGraph;
 import simulator.utils.graph.Node;
 
@@ -55,7 +55,7 @@ public class Building implements EventListener, EventInvoker {
         return Collections.unmodifiableList(this.rooms);
     }
 
-    public ImutableGraph<Room> getRoomSchema() {
+    public ImmutableGraph<Room> getRoomSchema() {
         return this.schema;
     }
 

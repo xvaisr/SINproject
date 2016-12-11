@@ -24,15 +24,15 @@ public class Roomba {
 
 
     public void moveViaDoor(Door d) {
-        Slot c1 = d.getCords1();
-        Slot c2 = d.getCords2();
+        Slot c1 = d.getSlot1();
+        Slot c2 = d.getSlot2();
         if (this.slot.equals(home.getSlot())) {
             this.leaveHome();
         }
         if (c1.equals(this.slot)) {
-            this.slot = d.getCords2();
+            this.slot = d.getSlot2();
         } else if (c2.equals(this.slot)) {
-            this.slot = d.getCords1();
+            this.slot = d.getSlot1();
         } else {
             System.out.println("Wrong door");
         }
