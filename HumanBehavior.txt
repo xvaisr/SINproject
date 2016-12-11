@@ -1,0 +1,102 @@
+Human.arrivesToWork():
+  Human.newMyOffice();
+  Human.leaveBuilding(time); // plan lunch or going home
+  90%	Human.walkPath(entrance,myOffice);
+   5%	Human.walkPath(entrance,kitchen);
+   2%	Human.walkPath(entrance,restrooms);
+   2%	Human.walkPath(entrance,otherRoom);
+   1%	Human.leaveBuilding(now);
+
+Human.walkPath():
+  Building.getRoomListForPath(from,to);
+  for (Room in roomList){
+   90%{	Room.movementIn();
+       	Human.changeRoom(Room);}
+   10%	Human.stopEvent();
+  }
+  if (to == office || to == meetingRoom){
+    90% Human.work();
+    4%	Human.walkPath(to,kitchen);
+    3%	Human.walkPath(to,restrooms);
+    2%	Human.walkPath(to,otherRoom);
+    1%	Human.walkPath(to,entrance);
+  } else if (to == kitchen) {
+    40% Human.getDrink();
+    30% Human.eat();
+    20% Human.chat();
+    4%	Human.walkPath(to,restrooms);
+    3%	Human.walkPath(to,myOffice);
+    2%	Human.walkPath(to,otherRoom);
+    1%	Human.walkPath(to,entrance);
+  } else if (to == restrooms){
+    95% Human.useRestroom();
+    3%	Human.walkPath(to,myOffice);
+    1%	Human.walkPath(to,otherRoom);
+    1%	Human.walkPath(to,entrance);
+  } else if (to == entrance){
+    Human.leaveBuilding(now);
+  }
+
+Human.stopEvent():
+  Human.removeAllPlanedEventsFromCalendar();  // keep the leave building event
+  70% Human.chat();
+  20% walkPath(currentRoom,restrooms);
+  6%  walkPath(currentRoom,myOffice);
+  3%  walkPath(currentRoom,entrance);
+  1%  walkPath(currentRoom,otherRoom);
+
+Human.work():
+  90% Human.wait(5min);
+  9% Human.stopEvent();
+  1% Human.walkPath(currentRoom,entrance);
+  Human.work();
+
+Human.getDrink():
+  { 90% Human.wait(3min);
+    9%  Human.stopEvent();
+    1%  Human.walkPath(kitchen,entrance);}
+  { 60% Human.walkPath(kitchen,myOffice);
+    35% Human.walkPath(kitchen,restrooms);
+    3%  Human.walkPath(kitchen,otherRoom);
+    2%  Human.walkPath(kitchen,entrance);}
+
+Human.eat():
+  { 90% Human.wait(15min);
+    9%  Human.stopEvent();
+    1%  Human.walkPath(kitchen,entrance);}
+  { 80% Human.walkPath(kitchen,myOffice);
+    15% Human.walkPath(kitchen,restrooms);
+    3%  Human.walkPath(kitchen,otherRoom);
+    2%  Human.walkPath(kitchen,entrance);}
+
+Human.chat():
+  { 90% Human.wait.(3min);
+    9%  Human.stopEvent();
+    1%  Human.walkPath(currentRoom,entrance);}
+  { 50% if (Human.isInHisOffice())
+            Human.work();
+        else
+	    Human.walkPath(currentRoom,myOffice);
+    26% Human.chat();
+    8%  Human.walkPath(currentRoom,kitchen);
+    8%  Human.walkPath(currentRoom,restrooms);
+    6%  Human.walkPath(currentRoom,otherRoom);
+    2%  Human.walkPath(kitchen,entrance);}
+
+Human.useRestroom():
+  { 70% Human.wait(3min);
+    20% Human.wait(10min);
+    9%  Human.stopEvent();
+    1%  Human.walkPath(restrooms,entrance);}
+  { 70% Human.walkPath(restrooms,myOffice);
+    20% Human.walkPath(restrooms,kitchen);
+    6%  Human.walkPath(restrooms,otherRoom);
+    4%  Human.walkPath(restrooms,entrance);}
+
+Human elementary actions:
+  .newMyOffice();
+  .leaveBuilding(time);
+  .changeRoom();
+  .removeAllPlanedEventsFromCalendar();
+  .wait(time);
+
