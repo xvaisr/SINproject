@@ -59,6 +59,7 @@ public class CommonRoom extends AbstractRoom {
         if (!this.entList.contains(ent)) {
             this.entList.add(ent);
             ent.addEventListener(this);
+            ent.setLocation(this);
         }
 
         return true;

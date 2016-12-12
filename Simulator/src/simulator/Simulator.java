@@ -115,7 +115,7 @@ public class Simulator {
         b.connectNewRoom(entrance, meetingroom);
 
         //office
-        office = new CommonRoom("Office1", 5, 7);
+        office = new CommonRoom("Office2", 5, 7);
         b.connectNewRoom(entrance, office);
 
         Entity sensor;

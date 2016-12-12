@@ -39,7 +39,7 @@ public class Building implements EventListener, EventInvoker {
     private final SimulationLogger logger;
 
     public Building() {
-        Room enterance = new CommonRoom("Enterance", 100, 100);
+        Room enterance = new CommonRoom("Enterance", 5, 10);
         this.rooms = new ArrayList();
         this.rooms.add(enterance);
         this.schema = new InternalGraph<>(new Node<>(enterance));

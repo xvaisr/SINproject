@@ -10,15 +10,18 @@ import simulator.utils.graph.ImmutableGraph;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by trepik on 5.12.2016.
  */
 public class Plan extends JPanel {
     private static final int slotSize = 100;
+    private static final int ENTRANCE = 0;
     private Slot[] slots;
     private Map<String, Room> rooms;
     private Map<String, Station> stations;
@@ -64,59 +67,73 @@ public class Plan extends JPanel {
         List<simulator.environement.rooms.Room> roomList;
         ImmutableGraph<simulator.environement.rooms.Room> schema;
 
-        roomList = b.getRoomList();
+        roomList = new LinkedList<>(b.getRoomList());
         schema = b.getRoomSchema();
 
-        simulator.environement.rooms.Room entrance;
+        List<Edge<simulator.environement.rooms.Room>> edges, unusedEdges;
+        unusedEdges = new LinkedList<>(b.getRoomSchema().getAllEdges());
+        simulator.environement.rooms.Room r = roomList.get(ENTRANCE);
+        addEntrance(r.getId(), r.getSurfaceArea());
+        roomList.remove(roomList.indexOf(r));
 
-        List<Edge<simulator.environement.rooms.Room>> edges;
-        edges = b.getRoomSchema().getAllEdges();
-        for (Edge<simulator.environement.rooms.Room> e : edges) {
-            addRoom(e.getNode(false).getObject().getId(), e.getNode(false).getObject().getId(), 0);
+        while (roomList.size() > 0) {
+
+            edges = new LinkedList<>(schema.getEdgesLinkedTo(r));
+            edges.retainAll(unusedEdges);
+            if (edges.isEmpty()){
+                roomList.remove(roomList.indexOf(r));
+            }
+            if (rooms.containsKey(r.getId())) { // room is already in GUI
+                for (Edge<simulator.environement.rooms.Room> ed : edges) {
+                    simulator.environement.rooms.Room left, right;
+                    left = ed.getNode(true).getObject();
+                    right = ed.getNode(false).getObject();
+
+                    if (r == left) {
+//                        System.out.println("Left: " + left.getId() + " " + right.getId());
+                        addRoom(left.getId(), right.getId(), right.getSurfaceArea());
+                        unusedEdges.remove(unusedEdges.indexOf(ed));
+                    } else {
+//                        System.out.println("Right: " + left.getId() + " " + right.getId());
+                        addRoom(right.getId(), left.getId(), left.getSurfaceArea());
+                        unusedEdges.remove(unusedEdges.indexOf(ed));
+                    }
+                    List<Entity> entList = r.getEntityList();
+                    for (Entity ent : entList) {
+                        if (ent instanceof DockingStation) {
+//                            System.out.println(ent.getId());
+                            addStation(ent.getId(), ent.getLocation().getId());
+                        }
+
+                        if (ent instanceof simulator.entities.impl.Roomba) {
+//                            System.out.println(ent.getId());
+                            placeRoomba(ent.getId(), ent.getLocation().getId());
+                        }
+                    }
+                }
+            }
+            if (roomList.isEmpty()) {
+                break;
+            }
+            r = roomList.get(ThreadLocalRandom.current().nextInt(0, roomList.size()));
         }
 
-
-
-        /*for (simulator.environement.rooms.Room r : roomList) {
-
-            edges = schema.getEdgesLinkedTo(r);
-
-            for (Edge<simulator.environement.rooms.Room> ed : edges) {
-                simulator.environement.rooms.Room r1, r2;
-                r1 = ed.getNode(false).getObject();
-                r2 = ed.getNode(true).getObject();
-
-                if (r == r1) {
-                    System.out.println("1: "+r1.getId()+" "+r2.getId());
-                    addRoom(r2.getId(),r1.getId(), r1.getSurfaceArea());
-                }
+        for (Edge<simulator.environement.rooms.Room> ed : unusedEdges) {
+            Room left = rooms.getOrDefault(ed.getNode(true).getObject().getId(), null);
+            Room right = rooms.getOrDefault(ed.getNode(false).getObject().getId(), null);
+            if (left != null && right != null) {
+                addDoor(left, right);
             }
+        }
+    }
 
-            List<Entity> entList = r.getEntityList();
-            for (Entity ent : entList) {
-                if (ent instanceof DockingStation) {
-                    addStation(ent.getId(), ent.getLocation().getId());
-                }
-
-                if (ent instanceof simulator.entities.impl.Roomba) {
-                    placeRoomba(ent.getId(), ent.getLocation().getId());
-                }
-            }
-        }*/
-//        addEntrance("1", 50);
-//        addRoom("1", "2", 30);
-//        addRoom("1", "3", 50);
-//        addRoom("2", "4", 25);
-//        addRoom("4", "5", 35);
-//        addRoom("1", "6", 53);
-//        addRoom("1", "7", 42);
-//        addStation("X", "1");
-//        addStation("Y", "5");
-//        placeRoomba("A", "X");
+    private void addDoor(Room left, Room right) {
+        Door d = new Door(left, right);
+        this.doors.put(left.getID() + " " + right.getID(), d);
     }
 
     private void addEntrance(String id, int area) {
-        Room r = new Room(this.slots[this.slots.length / 2], id,area);
+        Room r = new Room(this.slots[this.slots.length / 2], id, area);
         this.rooms.put(id, r);
     }
 
