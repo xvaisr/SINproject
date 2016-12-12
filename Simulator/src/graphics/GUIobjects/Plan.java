@@ -69,7 +69,7 @@ public class Plan extends JPanel {
 
         simulator.environement.rooms.Room entrance;
         entrance = b.getRoomSchema().getRoot().getObject();
-        addEntrance(entrance.getId(), entrance.getSurfaceArea() + 50);
+        addEntrance(entrance.getId(), entrance.getSurfaceArea());
 
         for (simulator.environement.rooms.Room r : roomList) {
             List<Edge<simulator.environement.rooms.Room>> edges;
@@ -77,14 +77,12 @@ public class Plan extends JPanel {
 
             for (Edge<simulator.environement.rooms.Room> ed : edges) {
                 simulator.environement.rooms.Room r1, r2;
-                r1 = (simulator.environement.rooms.Room) ed.getNode(false);
-                r2 = (simulator.environement.rooms.Room) ed.getNode(true);
+                r1 = ed.getNode(false).getObject();
+                r2 = ed.getNode(true).getObject();
 
                 if (r == r1) {
-                    addRoom(r1.getId(), r2.getId(), r2.getSurfaceArea());
-                }
-                else {
-                    addRoom(r2.getId(), r1.getId(), r1.getSurfaceArea());
+                    System.out.println("1: "+r1.getId()+" "+r2.getId());
+                    addRoom(r2.getId(),r1.getId(), r1.getSurfaceArea());
                 }
             }
 
@@ -112,7 +110,7 @@ public class Plan extends JPanel {
     }
 
     private void addEntrance(String id, int area) {
-        Room r = new Room(this.slots[this.slots.length / 2], area);
+        Room r = new Room(this.slots[this.slots.length / 2], id,area);
         this.rooms.put(id, r);
     }
 
@@ -120,7 +118,7 @@ public class Plan extends JPanel {
         Room r1 = rooms.getOrDefault(n1, null);
         if (r1 != null) {
             Slot s = findNeighbor(r1);
-            Room r2 = new Room(s, area);
+            Room r2 = new Room(s, n2, area);
             this.rooms.put(n2, r2);
             Door d = new Door(r1, r2);
             this.doors.put(n1 + " " + n2, d);

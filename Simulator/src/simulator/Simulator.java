@@ -81,12 +81,7 @@ public class Simulator {
         Event ev = new GeneralEvent("StartingEvent", null, null, new TimeStamp(), Collections.emptyList());
         s.scheduleEvent(ev);
 
-        Room hall = new CommonRoom("Hallway", 200, 10000);
-        Room entrance = b.getRoomList().get(0);
-        b.connectNewRoom(entrance, hall);
-
-        Entity sensor = new MovementSenzor("Sensor1");
-        hall.addEntity(sensor);
+        b.init(); //initialize building
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

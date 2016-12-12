@@ -32,7 +32,7 @@ public class Enterance extends AbstractRoom {
 
     @Override
     public int getSurfaceArea() {
-        return 0;
+        return 50;
     }
 
     @Override

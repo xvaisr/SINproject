@@ -7,15 +7,17 @@ import java.awt.*;
  * Created by trepik on 5.12.2016.
  */
 public class Room {
+    private String ID;
     private Slot slot;
     private int area;
     private Color color;
     private boolean selected;
     private boolean occupied;
 
-    public Room(Slot s, int a) {
+    public Room(Slot s, String n, int a) {
         this.slot = s;
         s.fill();
+        this.ID = n;
         this.area = a;
         this.color = Color.lightGray;
         this.selected = false;
@@ -43,6 +45,7 @@ public class Room {
             g.drawOval(this.slot.getX() - this.area / 2, this.slot.getY() - this.area / 2,
                     this.area, this.area);
         }
+        g.drawString(this.ID,this.slot.getX(),this.slot.getY());
     }
 
     public void startCleaning() {
