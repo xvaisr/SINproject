@@ -8,6 +8,7 @@ package simulator;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.SwingUtilities;
 import simulator.entities.Entity;
 import simulator.entities.actions.Action;
 import simulator.entities.impl.MovementSenzor;
@@ -78,11 +79,24 @@ public class Simulator {
         s.scheduleEvent(ev);
 
         Room hall = new CommonRoom("Hallway", 200, 10000);
-        Room enterance = b.getRoomList().get(0);
-        b.connectNewRoom(enterance, hall);
 
-        Entity senzor = new MovementSenzor("Senzor1");
-        hall.addEntity(senzor);
+        Room entrance = b.getRoomList().get(0);
+        b.connectNewRoom(entrance, hall);
+
+        Entity sensor = new MovementSenzor("Sensor1");
+        hall.addEntity(sensor);
+
+        // GUI by se melo zobrazit az po te, co se inicializuje budova, aby byla jistota ze vsechna data budou k dispozici
+        /*
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                final MainWindow win;
+                win = new MainWindow("SINproject");
+                win.setVisible(true);
+            }
+        });
+        */
 
         s.fireNextEvent();
     }
