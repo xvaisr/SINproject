@@ -14,13 +14,13 @@ import simulator.entities.Entity;
  */
 public class DockingStation extends AbstractEntity {
 
-    private final int id;
+    private final String id;
     private Roomba slot;
     private boolean functional;
     private final double chargeRate; // miliapers per second provided
 
 
-    public DockingStation(int id) {
+    public DockingStation(String id) {
         super();
         this.id = id;
         this.functional = true;

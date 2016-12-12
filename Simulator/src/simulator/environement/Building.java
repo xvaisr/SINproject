@@ -9,6 +9,8 @@ package simulator.environement;
 import java.util.*;
 import java.util.List;
 
+import simulator.entities.impl.DockingStation;
+import simulator.entities.impl.Roomba;
 import simulator.environement.rooms.Room;
 import simulator.environement.rooms.impl.CommonRoom;
 import simulator.environement.rooms.impl.Enterance;
@@ -126,9 +128,19 @@ public class Building implements EventListener, EventInvoker {
 //        addRoom("1", "3", 50);
         newRoom = new CommonRoom("Kitchen", 5, 10);
         addNewRoom(newRoom, "Entrance");
+//        addStation("X", "3");
+        DockingStation d = new DockingStation("Venice");
+        newRoom.addEntity(d);
+//        placeRoomba("A", "X");
+        d.dockEntity(new Roomba("Ballahoo"));
 //        addRoom("2", "4", 25);
         newRoom = new CommonRoom("Hallway", 5, 5);
         addNewRoom(newRoom, "Welcome Room");
+//        addStation("Y", "4");
+        d = new DockingStation("Dubrovnik");
+        newRoom.addEntity(d);
+//        placeRoomba("A", "X");
+        d.dockEntity(new Roomba("Tilbury"));
 //        addRoom("4", "5", 35);
         newRoom = new CommonRoom("Office1", 5, 7);
         addNewRoom(newRoom, "Hallway");
