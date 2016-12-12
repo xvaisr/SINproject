@@ -8,11 +8,9 @@ package simulator;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import graphics.MainWindow;
+import javax.swing.SwingUtilities;
 import simulator.entities.Entity;
 import simulator.entities.actions.Action;
-import simulator.entities.actions.common.StartEntity;
 import simulator.entities.impl.MovementSenzor;
 import simulator.environement.Building;
 import simulator.environement.rooms.Room;
@@ -24,8 +22,7 @@ import simulator.injection.impl.Injector;
 import simulator.logging.LoggerFactory;
 import simulator.logging.impl.SimulatorLoggerFactory;
 import simulator.utils.modeltime.TimeStamp;
-
-import javax.swing.*;
+import simulator.entities.actions.common.StartEntity;
 
 /**
  *
@@ -81,15 +78,25 @@ public class Simulator {
         Event ev = new GeneralEvent("StartingEvent", null, null, new TimeStamp(), Collections.emptyList());
         s.scheduleEvent(ev);
 
-        b.init(); //initialize building
+        Room hall = new CommonRoom("Hallway", 200, 10000);
 
+        Room entrance = b.getRoomList().get(0);
+        b.connectNewRoom(entrance, hall);
+
+        Entity sensor = new MovementSenzor("Sensor1");
+        hall.addEntity(sensor);
+
+        // GUI by se melo zobrazit az po te, co se inicializuje budova, aby byla jistota ze vsechna data budou k dispozici
+        /*
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 final MainWindow win;
                 win = new MainWindow("SINproject");
                 win.setVisible(true);
             }
         });
+        */
 
         s.fireNextEvent();
     }

@@ -11,8 +11,8 @@ import java.util.List;
 /**
  * Interface representing common type of graph, where nodes contain given type of object.
  * Depending on implementation, graph can be oriented with directional edges or general graph
- * with bidirectional edges. ImmutableGraph interface doesn't expose implementation of methods
- * that can modify graph.
+ with bidirectional edges. ImmutableGraph interface doesn't expose implementation of methods
+ that can modify graph.
  * @param <T> values
  *
  * @author Roman Vais
@@ -46,6 +46,12 @@ public interface ImmutableGraph<T> {
      * @return list of edges connecting given node to other edges.
      */
     public List<Edge<T>> getEdgesLinkedTo(T object);
+
+    /**
+     * Returns list of all edges in the graph.
+     * @return list of edges of this graph.
+     */
+    public List<Edge<T>> getAllEdges();
 
     /**
      * Returns list of all nodes contained in this graph.
