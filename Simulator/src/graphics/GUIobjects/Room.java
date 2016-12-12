@@ -45,7 +45,7 @@ public class Room {
             g.drawOval(this.slot.getX() - this.area / 2, this.slot.getY() - this.area / 2,
                     this.area, this.area);
         }
-        g.drawString(this.ID,this.slot.getX(),this.slot.getY());
+//        g.drawString(this.ID,this.slot.getX(),this.slot.getY());
     }
 
     public void startCleaning() {
@@ -70,5 +70,9 @@ public class Room {
 
     public void clear() {
         this.occupied = false;
+    }
+
+    public String getID() {
+        return ID;
     }
 }

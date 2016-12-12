@@ -8,6 +8,7 @@ package simulator.entities;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import simulator.entities.actions.Action;
 import simulator.environement.rooms.Room;
 import simulator.eventHandling.Event;
@@ -18,7 +19,6 @@ import simulator.logging.LoggerFactory;
 import simulator.logging.SimulationLogger;
 
 /**
- *
  * @author Roman Vais
  */
 public abstract class AbstractEntity implements Entity {
@@ -45,7 +45,9 @@ public abstract class AbstractEntity implements Entity {
     @Override
     public void setLocation(Room r) {
         if (r != null) {
-            this.location.removeEntity(this);
+            if (this.location != null) {
+                this.location.removeEntity(this);
+            }
             this.location = r;
             r.addEntity(this);
             this.logger.logSimulation("Location of '%s' has changed to '%s' room.", this.getId(), r.getId());
@@ -81,7 +83,7 @@ public abstract class AbstractEntity implements Entity {
     @Override
     public void perceiveEvent(Event ev) {
         for (EventFilter f : this.filters) {
-            if(!f.eventPass(ev)) {
+            if (!f.eventPass(ev)) {
                 this.logger.logDebug("Event '%s' did not pass filter. Skipping...", ev.getType());
                 return;
             }
