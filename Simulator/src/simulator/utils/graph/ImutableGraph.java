@@ -48,6 +48,12 @@ public interface ImutableGraph<T> {
     public List<Edge<T>> getEdgesLinkedTo(T object);
 
     /**
+     * Returns list of all edges in the graph.
+     * @return list of edges of this graph.
+     */
+    public List<Edge<T>> getAllEdges();
+
+    /**
      * Returns list of all nodes contained in this graph.
      *
      * @return list of all nodes

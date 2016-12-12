@@ -21,7 +21,7 @@ public class InternalGraph<T> implements Graph<T>{
 
     private Node<T> root;
     private HashMap<Node<T>, List<Edge<T>>> nodeMapings;
-
+    private List<Edge<T>> edges;
 
     public InternalGraph() {
         this(new Node(null));
@@ -30,6 +30,7 @@ public class InternalGraph<T> implements Graph<T>{
     public InternalGraph(Node<T> root) {
         this.root = root;
         this.nodeMapings = new HashMap();
+        this.edges = new LinkedList<>();
     }
 
     @Override
@@ -48,6 +49,8 @@ public class InternalGraph<T> implements Graph<T>{
 
         mapNodesToEdges(root, e);
         mapNodesToEdges(node, e);
+        this.edges.add(e);
+
     }
 
     private void mapNodesToEdges(Node<T> n, Edge<T> e) {
@@ -72,6 +75,11 @@ public class InternalGraph<T> implements Graph<T>{
     @Override
     public List<Edge<T>> getEdgesLinkedTo(T object) {
         return this.getEdgesLinkedTo(new Node<>(object));
+    }
+
+    @Override
+    public List<Edge<T>> getAllEdges() {
+        return Collections.unmodifiableList(this.edges);
     }
 
     @Override

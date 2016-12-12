@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import simulator.environement.rooms.Room;
+import simulator.environement.rooms.impl.CommonRoom;
 import simulator.environement.rooms.impl.Enterance;
 import simulator.eventHandling.Event;
 import simulator.eventHandling.EventFilter;
@@ -39,7 +40,7 @@ public class Building implements EventListener, EventInvoker {
     private final SimulationLogger logger;
 
     public Building() {
-        Room enterance = new Enterance();
+        Room enterance = new CommonRoom("Enterance", 100, 100);
         this.rooms = new ArrayList();
         this.rooms.add(enterance);
         this.schema = new InternalGraph<>(new Node<>(enterance));
