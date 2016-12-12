@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import simulator.environement.rooms.Room;
 import simulator.environement.rooms.impl.CommonRoom;
-import simulator.environement.rooms.impl.Enterance;
 import simulator.eventHandling.Event;
 import simulator.eventHandling.EventFilter;
 import simulator.eventHandling.EventInvoker;

@@ -5,6 +5,7 @@
  */
 package simulator;
 
+import graphics.MainWindow;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +24,8 @@ import simulator.logging.LoggerFactory;
 import simulator.logging.impl.SimulatorLoggerFactory;
 import simulator.utils.modeltime.TimeStamp;
 import simulator.entities.actions.common.StartEntity;
+import simulator.entities.impl.DockingStation;
+import simulator.entities.impl.Roomba;
 
 /**
  *
@@ -78,16 +81,54 @@ public class Simulator {
         Event ev = new GeneralEvent("StartingEvent", null, null, new TimeStamp(), Collections.emptyList());
         s.scheduleEvent(ev);
 
-        Room hall = new CommonRoom("Hallway", 200, 10000);
-
+        Room kitchen, hall, wroom, office, meetingroom;
         Room entrance = b.getRoomList().get(0);
-        b.connectNewRoom(entrance, hall);
 
-        Entity sensor = new MovementSenzor("Sensor1");
-        hall.addEntity(sensor);
+        // welcome room
+        wroom = new CommonRoom("Welcome Room", 5, 6);
+        b.connectNewRoom(entrance, wroom);
+
+        // kitchen
+        kitchen = new CommonRoom("Kitchen", 5, 10);
+        b.connectNewRoom(entrance, kitchen);
+        DockingStation d = new DockingStation("Venice");
+        Roomba r = new Roomba("Ballahoo");
+        kitchen.addEntity(d);
+        kitchen.addEntity(r);
+        d.dockEntity(r);
+
+        // hall
+        hall = new CommonRoom("Hallway", 5, 5);
+        b.connectNewRoom(wroom, hall);
+        d = new DockingStation("Dubrovnik");
+        r = new Roomba("Tilbury");
+        hall.addEntity(d);
+        hall.addEntity(r);
+        d.dockEntity(r);
+
+        //office
+        office = new CommonRoom("Office1", 5, 7);
+        b.connectNewRoom(hall, office);
+
+        // meeting room
+        meetingroom = new CommonRoom("Meeting Room", 6, 9);
+        b.connectNewRoom(entrance, meetingroom);
+
+        //office
+        office = new CommonRoom("Office1", 5, 7);
+        b.connectNewRoom(entrance, office);
+
+        Entity sensor;
+        sensor = new MovementSenzor("Sensor1");
+        entrance.addEntity(sensor);
+
+        sensor = new MovementSenzor("Sensor2");
+        meetingroom.addEntity(sensor);
+
+        sensor = new MovementSenzor("Sensor3");
+        kitchen.addEntity(sensor);
 
         // GUI by se melo zobrazit az po te, co se inicializuje budova, aby byla jistota ze vsechna data budou k dispozici
-        /*
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -96,7 +137,6 @@ public class Simulator {
                 win.setVisible(true);
             }
         });
-        */
 
         s.fireNextEvent();
     }

@@ -68,11 +68,17 @@ public class Plan extends JPanel {
         schema = b.getRoomSchema();
 
         simulator.environement.rooms.Room entrance;
-        entrance = b.getRoomSchema().getRoot().getObject();
-        addEntrance(entrance.getId(), entrance.getSurfaceArea());
 
-        for (simulator.environement.rooms.Room r : roomList) {
-            List<Edge<simulator.environement.rooms.Room>> edges;
+        List<Edge<simulator.environement.rooms.Room>> edges;
+        edges = b.getRoomSchema().getAllEdges();
+        for (Edge<simulator.environement.rooms.Room> e : edges) {
+            addRoom(e.getNode(false).getObject().getId(), e.getNode(false).getObject().getId(), 0);
+        }
+
+
+
+        /*for (simulator.environement.rooms.Room r : roomList) {
+
             edges = schema.getEdgesLinkedTo(r);
 
             for (Edge<simulator.environement.rooms.Room> ed : edges) {
@@ -96,7 +102,7 @@ public class Plan extends JPanel {
                     placeRoomba(ent.getId(), ent.getLocation().getId());
                 }
             }
-        }
+        }*/
 //        addEntrance("1", 50);
 //        addRoom("1", "2", 30);
 //        addRoom("1", "3", 50);
